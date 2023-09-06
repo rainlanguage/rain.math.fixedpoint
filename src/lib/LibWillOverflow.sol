@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: CAL
 pragma solidity ^0.8.18;
 
-import "../src/FixedPointDecimalConstants.sol";
+import "./FixedPointDecimalConstants.sol";
 
-library WillOverflow {
+library LibWillOverflow {
     /// Relevant logic taken direct from Open Zeppelin.
     function mulDivWillOverflow(uint256 x, uint256 y, uint256 denominator) internal pure returns (bool) {
         // 512-bit multiply [prod1 prod0] = x * y. Compute the product mod 2^256 and mod 2^256 - 1, then use

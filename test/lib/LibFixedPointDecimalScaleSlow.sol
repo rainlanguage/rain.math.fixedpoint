@@ -2,7 +2,7 @@
 pragma solidity ^0.8.18;
 
 import "rain.math.saturating/SaturatingMath.sol";
-import "../src/FixedPointDecimalConstants.sol";
+import "src/lib/FixedPointDecimalConstants.sol";
 
 /// @title FixedPointDecimalScaleSlow
 /// @notice Slow but more obviously correct versions of all functions in
@@ -12,7 +12,7 @@ import "../src/FixedPointDecimalConstants.sol";
 /// because they are DRY. However, scaling values can easily be on a hot gas path
 /// so we MAY inline a lot of the logic which makes them WETter. The slow and
 /// fast version MAY be identical.
-library FixedPointDecimalScaleSlow {
+library LibFixedPointDecimalScaleSlow {
     function scaleUpSlow(uint256 a_, uint256 scaleUpBy_) internal pure returns (uint256) {
         if (a_ == 0) {
             return 0;

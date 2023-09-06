@@ -37,76 +37,81 @@ import "./FixedPointDecimalConstants.sol";
 /// assume that an active participant, e.g. `msg.sender`, knowns something we
 /// don't and is carefully crafting an attack, so we are most conservative and
 /// suspicious of their inputs and actions.
-library FixedPointDecimalScale {
-    /// Scales `a_` up by a specified number of decimals.
-    /// @param a_ The number to scale up.
-    /// @param scaleUpBy_ Number of orders of magnitude to scale `b_` up by.
+library LibFixedPointDecimalScale {
+    /// Scales `a` up by a specified number of decimals.
+    /// @param a The number to scale up.
+    /// @param scaleUpBy Number of orders of magnitude to scale `b_` up by.
     /// Errors if overflows.
-    /// @return b_ `a_` scaled up by `scaleUpBy_`.
-    function scaleUp(uint256 a_, uint256 scaleUpBy_) internal pure returns (uint256 b_) {
+    /// @return b `a` scaled up by `scaleUpBy`.
+    function scaleUp(uint256 a, uint256 scaleUpBy) internal pure returns (uint256 b) {
         // Checked power is expensive so don't do that.
         unchecked {
-            b_ = 10 ** scaleUpBy_;
+            b = 10 ** scaleUpBy;
         }
-        b_ = a_ * b_;
+        b = a * b;
 
         // We know exactly when 10 ** X overflows so replay the checked version
         // to get the standard Solidity overflow behaviour. The branching logic
         // here is still ~230 gas cheaper than unconditionally running the
         // overflow checks. We're optimising for standardisation rather than gas
         // in the unhappy revert case.
-        if (scaleUpBy_ >= OVERFLOW_RESCALE_OOMS) {
-            b_ = a_ == 0 ? 0 : 10 ** scaleUpBy_;
+        if (scaleUpBy >= OVERFLOW_RESCALE_OOMS) {
+            b = a == 0 ? 0 : 10 ** scaleUpBy;
         }
     }
 
     /// Identical to `scaleUp` but saturates instead of reverting on overflow.
-    /// @param a_ As per `scaleUp`.
-    /// @param scaleUpBy_ As per `scaleUp`.
-    /// @return c_ As per `scaleUp` but saturates as `type(uint256).max` on
+    /// @param a As per `scaleUp`.
+    /// @param scaleUpBy As per `scaleUp`.
+    /// @return c As per `scaleUp` but saturates as `type(uint256).max` on
     /// overflow.
-    function scaleUpSaturating(uint256 a_, uint256 scaleUpBy_) internal pure returns (uint256 c_) {
+    function scaleUpSaturating(uint256 a, uint256 scaleUpBy) internal pure returns (uint256 c) {
         unchecked {
-            if (scaleUpBy_ >= OVERFLOW_RESCALE_OOMS) {
-                c_ = a_ == 0 ? 0 : type(uint256).max;
+            if (scaleUpBy >= OVERFLOW_RESCALE_OOMS) {
+                c = a == 0 ? 0 : type(uint256).max;
             } else {
                 // Adapted from saturatingMath.
                 // Inlining everything here saves ~250-300+ gas relative to slow.
-                uint256 b_ = 10 ** scaleUpBy_;
-                c_ = a_ * b_;
+                uint256 b_ = 10 ** scaleUpBy;
+                c = a * b_;
                 // Checking b_ here allows us to skip an "is zero" check because even
                 // 10 ** 0 = 1, so we have a positive lower bound on b_.
-                c_ = c_ / b_ == a_ ? c_ : type(uint256).max;
+                c = c / b_ == a ? c : type(uint256).max;
             }
         }
     }
 
-    /// Scales `a_` down by a specified number of decimals, rounding in the
-    /// specified direction. Used internally by several other functions in this
-    /// lib.
-    /// @param a_ The number to scale down.
-    /// @param scaleDownBy_ Number of orders of magnitude to scale `a_` down by.
+    /// Scales `a` down by a specified number of decimals, rounding down.
+    /// Used internally by several other functions in this lib.
+    /// @param a The number to scale down.
+    /// @param scaleDownBy Number of orders of magnitude to scale `a` down by.
     /// Overflows if greater than 77.
-    /// @return c_ `a_` scaled down by `scaleDownBy_` and rounded.
-    function scaleDown(uint256 a_, uint256 scaleDownBy_) internal pure returns (uint256) {
+    /// @return c `a` scaled down by `scaleDownBy` and rounded down.
+    function scaleDown(uint256 a, uint256 scaleDownBy) internal pure returns (uint256) {
         unchecked {
-            return scaleDownBy_ >= OVERFLOW_RESCALE_OOMS ? 0 : a_ / (10 ** scaleDownBy_);
+            return scaleDownBy >= OVERFLOW_RESCALE_OOMS ? 0 : a / (10 ** scaleDownBy);
         }
     }
 
-    function scaleDownRoundUp(uint256 a_, uint256 scaleDownBy_) internal pure returns (uint256 c_) {
+    /// Scales `a` down by a specified number of decimals, rounding up.
+    /// Used internally by several other functions in this lib.
+    /// @param a The number to scale down.
+    /// @param scaleDownBy Number of orders of magnitude to scale `a` down by.
+    /// Overflows if greater than 77.
+    /// @return c `a` scaled down by `scaleDownBy` and rounded up.
+    function scaleDownRoundUp(uint256 a, uint256 scaleDownBy) internal pure returns (uint256 c) {
         unchecked {
-            if (scaleDownBy_ >= OVERFLOW_RESCALE_OOMS) {
-                c_ = a_ == 0 ? 0 : 1;
+            if (scaleDownBy >= OVERFLOW_RESCALE_OOMS) {
+                c = a == 0 ? 0 : 1;
             } else {
-                uint256 b_ = 10 ** scaleDownBy_;
-                c_ = a_ / b_;
+                uint256 b = 10 ** scaleDownBy;
+                c = a / b;
 
                 // Intentionally doing a divide before multiply here to detect
                 // the need to round up.
                 //slither-disable-next-line divide-before-multiply
-                if (a_ != c_ * b_) {
-                    c_ += 1;
+                if (a != c * b) {
+                    c += 1;
                 }
             }
         }

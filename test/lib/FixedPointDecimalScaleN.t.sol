@@ -2,24 +2,24 @@
 pragma solidity ^0.8.18;
 
 import "forge-std/Test.sol";
-import "./WillOverflow.sol";
-import "../src/FixedPointDecimalScale.sol";
-import "./FixedPointDecimalScaleSlow.sol";
+import "src/lib/LibWillOverflow.sol";
+import "src/lib/LibFixedPointDecimalScale.sol";
+import "./LibFixedPointDecimalScaleSlow.sol";
 
 contract FixedPointDecimalScaleTestScaleN is Test {
     function testScaleNReferenceImplementation(uint256 a_, uint256 decimals_, uint256 flags_) public {
         vm.assume(flags_ <= FLAG_MAX_INT);
-        vm.assume(!WillOverflow.scaleNWillOverflow(a_, decimals_, flags_));
+        vm.assume(!LibWillOverflow.scaleNWillOverflow(a_, decimals_, flags_));
 
         assertEq(
-            FixedPointDecimalScaleSlow.scaleNSlow(a_, decimals_, flags_),
-            FixedPointDecimalScale.scaleN(a_, decimals_, flags_)
+            LibFixedPointDecimalScaleSlow.scaleNSlow(a_, decimals_, flags_),
+            LibFixedPointDecimalScale.scaleN(a_, decimals_, flags_)
         );
     }
 
     function testScaleN18(uint256 a_, uint256 flags_) public {
         vm.assume(flags_ <= FLAG_MAX_INT);
-        assertEq(a_, FixedPointDecimalScale.scale18(a_, FIXED_POINT_DECIMALS, flags_));
+        assertEq(a_, LibFixedPointDecimalScale.scale18(a_, FIXED_POINT_DECIMALS, flags_));
     }
 
     function testScaleNLt18(uint256 a_, uint8 targetDecimals_, uint256 flags_) public {
@@ -30,8 +30,8 @@ contract FixedPointDecimalScaleTestScaleN is Test {
         uint256 scaleDownBy_ = FIXED_POINT_DECIMALS - targetDecimals_;
 
         assertEq(
-            FixedPointDecimalScale.scaleN(a_, targetDecimals_, flags_),
-            FixedPointDecimalScale.scaleDown(a_, scaleDownBy_)
+            LibFixedPointDecimalScale.scaleN(a_, targetDecimals_, flags_),
+            LibFixedPointDecimalScale.scaleDown(a_, scaleDownBy_)
         );
     }
 
@@ -43,8 +43,8 @@ contract FixedPointDecimalScaleTestScaleN is Test {
         uint256 scaleDownBy_ = FIXED_POINT_DECIMALS - targetDecimals_;
 
         assertEq(
-            FixedPointDecimalScale.scaleN(a_, targetDecimals_, flags_),
-            FixedPointDecimalScale.scaleDownRoundUp(a_, scaleDownBy_)
+            LibFixedPointDecimalScale.scaleN(a_, targetDecimals_, flags_),
+            LibFixedPointDecimalScale.scaleDownRoundUp(a_, scaleDownBy_)
         );
     }
 
@@ -54,10 +54,11 @@ contract FixedPointDecimalScaleTestScaleN is Test {
         vm.assume(targetDecimals_ > FIXED_POINT_DECIMALS);
 
         uint256 scaleUpBy_ = targetDecimals_ - FIXED_POINT_DECIMALS;
-        vm.assume(!WillOverflow.scaleUpWillOverflow(a_, scaleUpBy_));
+        vm.assume(!LibWillOverflow.scaleUpWillOverflow(a_, scaleUpBy_));
 
         assertEq(
-            FixedPointDecimalScale.scaleN(a_, targetDecimals_, flags_), FixedPointDecimalScale.scaleUp(a_, scaleUpBy_)
+            LibFixedPointDecimalScale.scaleN(a_, targetDecimals_, flags_),
+            LibFixedPointDecimalScale.scaleUp(a_, scaleUpBy_)
         );
     }
 
@@ -67,10 +68,10 @@ contract FixedPointDecimalScaleTestScaleN is Test {
         vm.assume(targetDecimals_ > FIXED_POINT_DECIMALS);
 
         uint256 scaleUpBy_ = targetDecimals_ - FIXED_POINT_DECIMALS;
-        vm.assume(WillOverflow.scaleUpWillOverflow(a_, scaleUpBy_));
+        vm.assume(LibWillOverflow.scaleUpWillOverflow(a_, scaleUpBy_));
 
         vm.expectRevert(stdError.arithmeticError);
-        FixedPointDecimalScale.scaleN(a_, targetDecimals_, flags_);
+        LibFixedPointDecimalScale.scaleN(a_, targetDecimals_, flags_);
     }
 
     function testScaleNGt18Saturate(uint256 a_, uint8 targetDecimals_, uint256 flags_) public {
@@ -81,8 +82,8 @@ contract FixedPointDecimalScaleTestScaleN is Test {
         uint256 scaleUpBy_ = targetDecimals_ - FIXED_POINT_DECIMALS;
 
         assertEq(
-            FixedPointDecimalScale.scaleUpSaturating(a_, scaleUpBy_),
-            FixedPointDecimalScale.scaleN(a_, targetDecimals_, flags_)
+            LibFixedPointDecimalScale.scaleUpSaturating(a_, scaleUpBy_),
+            LibFixedPointDecimalScale.scaleN(a_, targetDecimals_, flags_)
         );
     }
 }

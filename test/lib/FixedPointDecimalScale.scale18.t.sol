@@ -2,24 +2,24 @@
 pragma solidity ^0.8.18;
 
 import "forge-std/Test.sol";
-import "./WillOverflow.sol";
-import "../src/FixedPointDecimalScale.sol";
-import "./FixedPointDecimalScaleSlow.sol";
+import "src/lib/LibWillOverflow.sol";
+import "src/lib/LibFixedPointDecimalScale.sol";
+import "./LibFixedPointDecimalScaleSlow.sol";
 
 contract FixedPointDecimalScaleTestScale18 is Test {
     function testScale18ReferenceImplementation(uint256 a_, uint256 decimals_, uint256 flags_) public {
         vm.assume(flags_ <= FLAG_MAX_INT);
-        vm.assume(!WillOverflow.scale18WillOverflow(a_, decimals_, flags_));
+        vm.assume(!LibWillOverflow.scale18WillOverflow(a_, decimals_, flags_));
 
         assertEq(
-            FixedPointDecimalScaleSlow.scale18Slow(a_, decimals_, flags_),
-            FixedPointDecimalScale.scale18(a_, decimals_, flags_)
+            LibFixedPointDecimalScaleSlow.scale18Slow(a_, decimals_, flags_),
+            LibFixedPointDecimalScale.scale18(a_, decimals_, flags_)
         );
     }
 
     function testScale1818(uint256 a_, uint256 flags_) public {
         vm.assume(flags_ <= FLAG_MAX_INT);
-        assertEq(a_, FixedPointDecimalScale.scale18(a_, FIXED_POINT_DECIMALS, flags_));
+        assertEq(a_, LibFixedPointDecimalScale.scale18(a_, FIXED_POINT_DECIMALS, flags_));
     }
 
     function testScale18Lt(uint256 a_, uint256 decimals_, uint256 flags_) public {
@@ -28,12 +28,14 @@ contract FixedPointDecimalScaleTestScale18 is Test {
         vm.assume(decimals_ < FIXED_POINT_DECIMALS);
 
         uint256 scaleUpBy_ = FIXED_POINT_DECIMALS - decimals_;
-        vm.assume(!WillOverflow.scaleUpWillOverflow(a_, scaleUpBy_));
+        vm.assume(!LibWillOverflow.scaleUpWillOverflow(a_, scaleUpBy_));
 
-        assertEq(FixedPointDecimalScale.scaleUp(a_, scaleUpBy_), FixedPointDecimalScale.scale18(a_, decimals_, flags_));
         assertEq(
-            FixedPointDecimalScale.scaleUpSaturating(a_, scaleUpBy_),
-            FixedPointDecimalScale.scale18(a_, decimals_, flags_)
+            LibFixedPointDecimalScale.scaleUp(a_, scaleUpBy_), LibFixedPointDecimalScale.scale18(a_, decimals_, flags_)
+        );
+        assertEq(
+            LibFixedPointDecimalScale.scaleUpSaturating(a_, scaleUpBy_),
+            LibFixedPointDecimalScale.scale18(a_, decimals_, flags_)
         );
     }
 
@@ -43,10 +45,10 @@ contract FixedPointDecimalScaleTestScale18 is Test {
         vm.assume(decimals_ < FIXED_POINT_DECIMALS);
 
         uint256 scaleUpBy_ = FIXED_POINT_DECIMALS - decimals_;
-        vm.assume(WillOverflow.scaleUpWillOverflow(a_, scaleUpBy_));
+        vm.assume(LibWillOverflow.scaleUpWillOverflow(a_, scaleUpBy_));
 
         vm.expectRevert(stdError.arithmeticError);
-        FixedPointDecimalScale.scale18(a_, decimals_, flags_);
+        LibFixedPointDecimalScale.scale18(a_, decimals_, flags_);
     }
 
     function testScale18LtSaturate(uint256 a_, uint256 decimals_, uint256 flags_) public {
@@ -57,8 +59,8 @@ contract FixedPointDecimalScaleTestScale18 is Test {
         uint256 scaleUpBy_ = FIXED_POINT_DECIMALS - decimals_;
 
         assertEq(
-            FixedPointDecimalScale.scaleUpSaturating(a_, scaleUpBy_),
-            FixedPointDecimalScale.scale18(a_, decimals_, flags_)
+            LibFixedPointDecimalScale.scaleUpSaturating(a_, scaleUpBy_),
+            LibFixedPointDecimalScale.scale18(a_, decimals_, flags_)
         );
     }
 
@@ -70,7 +72,8 @@ contract FixedPointDecimalScaleTestScale18 is Test {
         uint256 scaleDownBy_ = decimals_ - FIXED_POINT_DECIMALS;
 
         assertEq(
-            FixedPointDecimalScale.scaleDown(a_, scaleDownBy_), FixedPointDecimalScale.scale18(a_, decimals_, flags_)
+            LibFixedPointDecimalScale.scaleDown(a_, scaleDownBy_),
+            LibFixedPointDecimalScale.scale18(a_, decimals_, flags_)
         );
     }
 
@@ -82,8 +85,8 @@ contract FixedPointDecimalScaleTestScale18 is Test {
         uint256 scaleDownBy_ = decimals_ - FIXED_POINT_DECIMALS;
 
         assertEq(
-            FixedPointDecimalScale.scaleDownRoundUp(a_, scaleDownBy_),
-            FixedPointDecimalScale.scale18(a_, decimals_, flags_)
+            LibFixedPointDecimalScale.scaleDownRoundUp(a_, scaleDownBy_),
+            LibFixedPointDecimalScale.scale18(a_, decimals_, flags_)
         );
     }
 }

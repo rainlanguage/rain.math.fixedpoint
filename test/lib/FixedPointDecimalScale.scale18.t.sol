@@ -30,9 +30,7 @@ contract FixedPointDecimalScaleTestScale18 is Test {
         uint256 scaleUpBy = FIXED_POINT_DECIMALS - decimals;
         vm.assume(!LibWillOverflow.scaleUpWillOverflow(a, scaleUpBy));
 
-        assertEq(
-            LibFixedPointDecimalScale.scaleUp(a, scaleUpBy), LibFixedPointDecimalScale.scale18(a, decimals, flags)
-        );
+        assertEq(LibFixedPointDecimalScale.scaleUp(a, scaleUpBy), LibFixedPointDecimalScale.scale18(a, decimals, flags));
         assertEq(
             LibFixedPointDecimalScale.scaleUpSaturating(a, scaleUpBy),
             LibFixedPointDecimalScale.scale18(a, decimals, flags)
@@ -72,8 +70,7 @@ contract FixedPointDecimalScaleTestScale18 is Test {
         uint256 scaleDownBy = decimals - FIXED_POINT_DECIMALS;
 
         assertEq(
-            LibFixedPointDecimalScale.scaleDown(a, scaleDownBy),
-            LibFixedPointDecimalScale.scale18(a, decimals, flags)
+            LibFixedPointDecimalScale.scaleDown(a, scaleDownBy), LibFixedPointDecimalScale.scale18(a, decimals, flags)
         );
     }
 

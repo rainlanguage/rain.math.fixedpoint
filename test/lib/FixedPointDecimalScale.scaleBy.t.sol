@@ -30,8 +30,7 @@ contract FixedPointDecimalScaleTestScaleBy is Test {
         vm.assume(!LibWillOverflow.scaleUpWillOverflow(a, uint8(scaleBy)));
 
         assertEq(
-            LibFixedPointDecimalScale.scaleUp(a, uint8(scaleBy)),
-            LibFixedPointDecimalScale.scaleBy(a, scaleBy, flags)
+            LibFixedPointDecimalScale.scaleUp(a, uint8(scaleBy)), LibFixedPointDecimalScale.scaleBy(a, scaleBy, flags)
         );
     }
 

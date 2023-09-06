@@ -27,8 +27,7 @@ contract FixedPointDecimalScaleTestScaleUpSaturating is Test {
         vm.assume(!LibWillOverflow.scaleUpWillOverflow(a, scaleUpBy));
 
         assertEq(
-            LibFixedPointDecimalScale.scaleUp(a, scaleUpBy),
-            LibFixedPointDecimalScale.scaleUpSaturating(a, scaleUpBy)
+            LibFixedPointDecimalScale.scaleUp(a, scaleUpBy), LibFixedPointDecimalScale.scaleUpSaturating(a, scaleUpBy)
         );
     }
 

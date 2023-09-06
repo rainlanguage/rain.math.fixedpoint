@@ -56,6 +56,9 @@ library LibWillOverflow {
         }
         uint256 b = 10 ** scaleDownBy;
         uint256 c = a / b;
+        // Discovering precision loss is the whole point of this check so the
+        // thing slither is complaining about is exactly what we're measuring.
+        //slither-disable-next-line divide-before-multiply
         return c * b != a;
     }
 

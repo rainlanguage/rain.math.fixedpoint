@@ -5,7 +5,7 @@ import {Math} from "openzeppelin-contracts/contracts/utils/math/Math.sol";
 
 import "./FixedPointDecimalConstants.sol";
 
-library FixedPointDecimalArithmeticOpenZeppelin {
+library LibFixedPointDecimalArithmeticOpenZeppelin {
     using Math for uint256;
 
     /// Fixed point multiplication in 18 decimal fixed point.

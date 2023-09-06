@@ -7,32 +7,32 @@ import "src/lib/LibWillOverflow.sol";
 import "./LibFixedPointDecimalScaleSlow.sol";
 
 contract FixedPointDecimalScaleTestScaleDown is Test {
-    function testScaleDownReferenceImplementation(uint256 a_, uint8 scaleDownBy_) public {
+    function testScaleDownReferenceImplementation(uint256 a, uint8 scaleDownBy) public {
         assertEq(
-            LibFixedPointDecimalScaleSlow.scaleDownRoundUpSlow(a_, scaleDownBy_),
-            LibFixedPointDecimalScale.scaleDownRoundUp(a_, scaleDownBy_)
+            LibFixedPointDecimalScaleSlow.scaleDownRoundUpSlow(a, scaleDownBy),
+            LibFixedPointDecimalScale.scaleDownRoundUp(a, scaleDownBy)
         );
     }
 
-    function testScaleDownRoundUpOverflow(uint256 a_, uint256 scaleDownBy_) public {
-        vm.assume(a_ > 0);
-        vm.assume(scaleDownBy_ >= OVERFLOW_RESCALE_OOMS);
+    function testScaleDownRoundUpOverflow(uint256 a, uint256 scaleDownBy) public {
+        vm.assume(a > 0);
+        vm.assume(scaleDownBy >= OVERFLOW_RESCALE_OOMS);
 
-        assertEq(1, LibFixedPointDecimalScale.scaleDownRoundUp(a_, scaleDownBy_));
+        assertEq(1, LibFixedPointDecimalScale.scaleDownRoundUp(a, scaleDownBy));
     }
 
-    function testScaleDownRoundUpOverflow0(uint256 scaleDownBy_) public {
-        vm.assume(scaleDownBy_ >= OVERFLOW_RESCALE_OOMS);
+    function testScaleDownRoundUpOverflow0(uint256 scaleDownBy) public {
+        vm.assume(scaleDownBy >= OVERFLOW_RESCALE_OOMS);
 
-        assertEq(0, LibFixedPointDecimalScale.scaleDownRoundUp(0, scaleDownBy_));
+        assertEq(0, LibFixedPointDecimalScale.scaleDownRoundUp(0, scaleDownBy));
     }
 
-    function testScaleDownBy0(uint256 a_) public {
-        assertEq(a_, LibFixedPointDecimalScale.scaleDownRoundUp(a_, 0));
+    function testScaleDownBy0(uint256 a) public {
+        assertEq(a, LibFixedPointDecimalScale.scaleDownRoundUp(a, 0));
     }
 
-    function testScaleDown0(uint256 scaleDownBy_) public {
-        assertEq(0, LibFixedPointDecimalScale.scaleDownRoundUp(0, scaleDownBy_));
+    function testScaleDown0(uint256 scaleDownBy) public {
+        assertEq(0, LibFixedPointDecimalScale.scaleDownRoundUp(0, scaleDownBy));
     }
 
     function testScaleDownRoundUpGas1() public pure {

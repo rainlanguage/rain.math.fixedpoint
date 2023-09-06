@@ -7,73 +7,73 @@ import "src/lib/LibFixedPointDecimalScale.sol";
 import "./LibFixedPointDecimalScaleSlow.sol";
 
 contract FixedPointDecimalScaleTestScaleBy is Test {
-    function testScaleByReferenceImplementation(uint256 a_, int8 scaleBy_, uint256 flags_) public {
-        vm.assume(flags_ <= FLAG_MAX_INT);
-        vm.assume(!LibWillOverflow.scaleByWillOverflow(a_, scaleBy_, flags_));
+    function testScaleByReferenceImplementation(uint256 a, int8 scaleBy, uint256 flags) public {
+        vm.assume(flags <= FLAG_MAX_INT);
+        vm.assume(!LibWillOverflow.scaleByWillOverflow(a, scaleBy, flags));
 
         assertEq(
-            LibFixedPointDecimalScaleSlow.scaleBySlow(a_, scaleBy_, flags_),
-            LibFixedPointDecimalScale.scaleBy(a_, scaleBy_, flags_)
+            LibFixedPointDecimalScaleSlow.scaleBySlow(a, scaleBy, flags),
+            LibFixedPointDecimalScale.scaleBy(a, scaleBy, flags)
         );
     }
 
-    function testScaleBy0(uint256 a_, uint256 flags_) public {
-        vm.assume(flags_ <= FLAG_MAX_INT);
+    function testScaleBy0(uint256 a, uint256 flags) public {
+        vm.assume(flags <= FLAG_MAX_INT);
 
-        assertEq(a_, LibFixedPointDecimalScale.scaleBy(a_, 0, flags_));
+        assertEq(a, LibFixedPointDecimalScale.scaleBy(a, 0, flags));
     }
 
-    function testScaleByUp(uint256 a_, int8 scaleBy_, uint256 flags_) public {
+    function testScaleByUp(uint256 a, int8 scaleBy, uint256 flags) public {
         // Keep rounding flag.
-        flags_ = flags_ & FLAG_ROUND_UP;
-        vm.assume(scaleBy_ > 0);
-        vm.assume(!LibWillOverflow.scaleUpWillOverflow(a_, uint8(scaleBy_)));
+        flags = flags & FLAG_ROUND_UP;
+        vm.assume(scaleBy > 0);
+        vm.assume(!LibWillOverflow.scaleUpWillOverflow(a, uint8(scaleBy)));
 
         assertEq(
-            LibFixedPointDecimalScale.scaleUp(a_, uint8(scaleBy_)),
-            LibFixedPointDecimalScale.scaleBy(a_, scaleBy_, flags_)
+            LibFixedPointDecimalScale.scaleUp(a, uint8(scaleBy)),
+            LibFixedPointDecimalScale.scaleBy(a, scaleBy, flags)
         );
     }
 
-    function testScaleByUpOverflow(uint256 a_, int8 scaleBy_, uint256 flags_) public {
+    function testScaleByUpOverflow(uint256 a, int8 scaleBy, uint256 flags) public {
         // Keep rounding flag.
-        flags_ = flags_ & FLAG_ROUND_UP;
-        vm.assume(scaleBy_ > 0);
-        vm.assume(LibWillOverflow.scaleUpWillOverflow(a_, uint8(scaleBy_)));
+        flags = flags & FLAG_ROUND_UP;
+        vm.assume(scaleBy > 0);
+        vm.assume(LibWillOverflow.scaleUpWillOverflow(a, uint8(scaleBy)));
         vm.expectRevert(stdError.arithmeticError);
-        LibFixedPointDecimalScale.scaleBy(a_, scaleBy_, flags_);
+        LibFixedPointDecimalScale.scaleBy(a, scaleBy, flags);
     }
 
-    function testScaleByUpSaturate(uint256 a_, int8 scaleBy_, uint256 flags_) public {
+    function testScaleByUpSaturate(uint256 a, int8 scaleBy, uint256 flags) public {
         // Keep rounding flag.
-        flags_ = FLAG_SATURATE | (flags_ & FLAG_ROUND_UP);
-        vm.assume(scaleBy_ > 0);
+        flags = FLAG_SATURATE | (flags & FLAG_ROUND_UP);
+        vm.assume(scaleBy > 0);
 
         assertEq(
-            LibFixedPointDecimalScale.scaleUpSaturating(a_, uint8(scaleBy_)),
-            LibFixedPointDecimalScale.scaleBy(a_, scaleBy_, flags_)
+            LibFixedPointDecimalScale.scaleUpSaturating(a, uint8(scaleBy)),
+            LibFixedPointDecimalScale.scaleBy(a, scaleBy, flags)
         );
     }
 
-    function testScaleByDown(uint256 a_, int8 scaleBy_, uint256 flags_) public {
+    function testScaleByDown(uint256 a, int8 scaleBy, uint256 flags) public {
         // Keep saturate flag.
-        flags_ = flags_ & FLAG_SATURATE;
-        vm.assume(scaleBy_ < 0);
+        flags = flags & FLAG_SATURATE;
+        vm.assume(scaleBy < 0);
 
         assertEq(
-            LibFixedPointDecimalScale.scaleBy(a_, scaleBy_, flags_),
-            LibFixedPointDecimalScale.scaleDown(a_, stdMath.abs(scaleBy_))
+            LibFixedPointDecimalScale.scaleBy(a, scaleBy, flags),
+            LibFixedPointDecimalScale.scaleDown(a, stdMath.abs(scaleBy))
         );
     }
 
-    function testScaleByDownRoundUp(uint256 a_, int8 scaleBy_, uint256 flags_) public {
+    function testScaleByDownRoundUp(uint256 a, int8 scaleBy, uint256 flags) public {
         // Keep saturate flag.
-        flags_ = FLAG_ROUND_UP | (flags_ & FLAG_SATURATE);
-        vm.assume(scaleBy_ < 0);
+        flags = FLAG_ROUND_UP | (flags & FLAG_SATURATE);
+        vm.assume(scaleBy < 0);
 
         assertEq(
-            LibFixedPointDecimalScale.scaleBy(a_, scaleBy_, flags_),
-            LibFixedPointDecimalScale.scaleDownRoundUp(a_, stdMath.abs(scaleBy_))
+            LibFixedPointDecimalScale.scaleBy(a, scaleBy, flags),
+            LibFixedPointDecimalScale.scaleDownRoundUp(a, stdMath.abs(scaleBy))
         );
     }
 }

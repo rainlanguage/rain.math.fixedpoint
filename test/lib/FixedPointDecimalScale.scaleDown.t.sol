@@ -7,43 +7,43 @@ import "src/lib/LibWillOverflow.sol";
 import "./LibFixedPointDecimalScaleSlow.sol";
 
 contract FixedPointDecimalScaleTestScaleDown is Test {
-    function testScaleDownReferenceImplementation(uint256 a_, uint8 scaleDownBy_) public {
+    function testScaleDownReferenceImplementation(uint256 a, uint8 scaleDownBy) public {
         assertEq(
-            LibFixedPointDecimalScaleSlow.scaleDownSlow(a_, scaleDownBy_),
-            LibFixedPointDecimalScale.scaleDown(a_, scaleDownBy_)
+            LibFixedPointDecimalScaleSlow.scaleDownSlow(a, scaleDownBy),
+            LibFixedPointDecimalScale.scaleDown(a, scaleDownBy)
         );
     }
 
-    function testScaleDownNoRound(uint256 a_, uint8 scaleDownBy_) public {
-        vm.assume(!LibWillOverflow.scaleDownWillRound(a_, scaleDownBy_));
+    function testScaleDownNoRound(uint256 a, uint8 scaleDownBy) public {
+        vm.assume(!LibWillOverflow.scaleDownWillRound(a, scaleDownBy));
 
         assertEq(
-            LibFixedPointDecimalScale.scaleDown(a_, scaleDownBy_),
-            LibFixedPointDecimalScale.scaleDownRoundUp(a_, scaleDownBy_)
+            LibFixedPointDecimalScale.scaleDown(a, scaleDownBy),
+            LibFixedPointDecimalScale.scaleDownRoundUp(a, scaleDownBy)
         );
     }
 
-    function testScaleDownRoundDiff(uint256 a_, uint8 scaleDownBy_) public {
-        vm.assume(LibWillOverflow.scaleDownWillRound(a_, scaleDownBy_));
+    function testScaleDownRoundDiff(uint256 a, uint8 scaleDownBy) public {
+        vm.assume(LibWillOverflow.scaleDownWillRound(a, scaleDownBy));
 
         assertEq(
-            LibFixedPointDecimalScale.scaleDown(a_, scaleDownBy_) + 1,
-            LibFixedPointDecimalScale.scaleDownRoundUp(a_, scaleDownBy_)
+            LibFixedPointDecimalScale.scaleDown(a, scaleDownBy) + 1,
+            LibFixedPointDecimalScale.scaleDownRoundUp(a, scaleDownBy)
         );
     }
 
-    function testScaleDownOverflow(uint256 a_, uint256 scaleDownBy_) public {
-        vm.assume(scaleDownBy_ >= OVERFLOW_RESCALE_OOMS);
+    function testScaleDownOverflow(uint256 a, uint256 scaleDownBy) public {
+        vm.assume(scaleDownBy >= OVERFLOW_RESCALE_OOMS);
 
-        assertEq(0, LibFixedPointDecimalScale.scaleDown(a_, scaleDownBy_));
+        assertEq(0, LibFixedPointDecimalScale.scaleDown(a, scaleDownBy));
     }
 
-    function testScaleDownBy0(uint256 a_) public {
-        assertEq(a_, LibFixedPointDecimalScale.scaleDown(a_, 0));
+    function testScaleDownBy0(uint256 a) public {
+        assertEq(a, LibFixedPointDecimalScale.scaleDown(a, 0));
     }
 
-    function testScaleDown0(uint256 scaleDownBy_) public {
-        assertEq(0, LibFixedPointDecimalScale.scaleDown(0, scaleDownBy_));
+    function testScaleDown0(uint256 scaleDownBy) public {
+        assertEq(0, LibFixedPointDecimalScale.scaleDown(0, scaleDownBy));
     }
 
     function testScaleDownGas0() public pure {

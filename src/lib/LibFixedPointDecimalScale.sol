@@ -118,28 +118,28 @@ library LibFixedPointDecimalScale {
     }
 
     /// Scale a fixed point decimal of some scale factor to 18 decimals.
-    /// @param a_ Some fixed point decimal value.
-    /// @param decimals_ The number of fixed decimals of `a_`.
-    /// @param flags_ Controls rounding and saturation.
-    /// @return `a_` scaled to 18 decimals.
-    function scale18(uint256 a_, uint256 decimals_, uint256 flags_) internal pure returns (uint256) {
+    /// @param a Some fixed point decimal value.
+    /// @param decimals The number of fixed decimals of `a`.
+    /// @param flags Controls rounding and saturation.
+    /// @return `a` scaled to 18 decimals.
+    function scale18(uint256 a, uint256 decimals, uint256 flags) internal pure returns (uint256) {
         unchecked {
-            if (FIXED_POINT_DECIMALS > decimals_) {
-                uint256 scaleUpBy_ = FIXED_POINT_DECIMALS - decimals_;
-                if (flags_ & FLAG_SATURATE > 0) {
-                    return scaleUpSaturating(a_, scaleUpBy_);
+            if (FIXED_POINT_DECIMALS > decimals) {
+                uint256 scaleUpBy = FIXED_POINT_DECIMALS - decimals;
+                if (flags & FLAG_SATURATE > 0) {
+                    return scaleUpSaturating(a, scaleUpBy);
                 } else {
-                    return scaleUp(a_, scaleUpBy_);
+                    return scaleUp(a, scaleUpBy);
                 }
-            } else if (decimals_ > FIXED_POINT_DECIMALS) {
-                uint256 scaleDownBy_ = decimals_ - FIXED_POINT_DECIMALS;
-                if (flags_ & FLAG_ROUND_UP > 0) {
-                    return scaleDownRoundUp(a_, scaleDownBy_);
+            } else if (decimals > FIXED_POINT_DECIMALS) {
+                uint256 scaleDownBy = decimals - FIXED_POINT_DECIMALS;
+                if (flags & FLAG_ROUND_UP > 0) {
+                    return scaleDownRoundUp(a, scaleDownBy);
                 } else {
-                    return scaleDown(a_, scaleDownBy_);
+                    return scaleDown(a, scaleDownBy);
                 }
             } else {
-                return a_;
+                return a;
             }
         }
     }
@@ -147,101 +147,62 @@ library LibFixedPointDecimalScale {
     /// Scale an 18 decimal fixed point value to some other scale.
     /// Exactly the inverse behaviour of `scale18`. Where `scale18` would scale
     /// up, `scaleN` scales down, and vice versa.
-    /// @param a_ An 18 decimal fixed point number.
-    /// @param targetDecimals_ The new scale of `a_`.
-    /// @param flags_ Controls rounding and saturation.
-    /// @return `a_` rescaled from 18 to `targetDecimals_`.
-    function scaleN(uint256 a_, uint256 targetDecimals_, uint256 flags_) internal pure returns (uint256) {
+    /// @param a An 18 decimal fixed point number.
+    /// @param targetDecimals The new scale of `a`.
+    /// @param flags Controls rounding and saturation.
+    /// @return `a` rescaled from 18 to `targetDecimals`.
+    function scaleN(uint256 a, uint256 targetDecimals, uint256 flags) internal pure returns (uint256) {
         unchecked {
-            if (FIXED_POINT_DECIMALS > targetDecimals_) {
-                uint256 scaleDownBy_ = FIXED_POINT_DECIMALS - targetDecimals_;
-                if (flags_ & FLAG_ROUND_UP > 0) {
-                    return scaleDownRoundUp(a_, scaleDownBy_);
+            if (FIXED_POINT_DECIMALS > targetDecimals) {
+                uint256 scaleDownBy = FIXED_POINT_DECIMALS - targetDecimals;
+                if (flags & FLAG_ROUND_UP > 0) {
+                    return scaleDownRoundUp(a, scaleDownBy);
                 } else {
-                    return scaleDown(a_, scaleDownBy_);
+                    return scaleDown(a, scaleDownBy);
                 }
-            } else if (targetDecimals_ > FIXED_POINT_DECIMALS) {
-                uint256 scaleUpBy_ = targetDecimals_ - FIXED_POINT_DECIMALS;
-                if (flags_ & FLAG_SATURATE > 0) {
-                    return scaleUpSaturating(a_, scaleUpBy_);
+            } else if (targetDecimals > FIXED_POINT_DECIMALS) {
+                uint256 scaleUpBy = targetDecimals - FIXED_POINT_DECIMALS;
+                if (flags & FLAG_SATURATE > 0) {
+                    return scaleUpSaturating(a, scaleUpBy);
                 } else {
-                    return scaleUp(a_, scaleUpBy_);
+                    return scaleUp(a, scaleUpBy);
                 }
             } else {
-                return a_;
+                return a;
             }
         }
     }
 
-    /// Scale a fixed point up or down by `scaleBy_` orders of magnitude.
+    /// Scale a fixed point up or down by `ooms` orders of magnitude.
     /// Notably `scaleBy` is a SIGNED integer so scaling down by negative OOMS
-    /// is supported.
-    /// @param a_ Some integer of any scale.
-    /// @param scaleBy_ OOMs to scale `a_` up or down by. This is a SIGNED int8
+    /// IS supported.
+    /// @param a Some integer of any scale.
+    /// @param ooms OOMs to scale `a` up or down by. This is a SIGNED int8
     /// which means it can be negative, and also means that sign extension MUST
     /// be considered if changing it to another type.
-    /// @param flags_ Controls rounding and saturating.
-    /// @return `a_` rescaled according to `scaleBy_`.
-    function scaleBy(uint256 a_, int8 scaleBy_, uint256 flags_) internal pure returns (uint256) {
+    /// @param flags Controls rounding and saturating.
+    /// @return `a` rescaled according to `ooms`.
+    function scaleBy(uint256 a, int8 ooms, uint256 flags) internal pure returns (uint256) {
         unchecked {
-            if (scaleBy_ > 0) {
-                if (flags_ & FLAG_SATURATE > 0) {
-                    return scaleUpSaturating(a_, uint8(scaleBy_));
+            if (ooms > 0) {
+                if (flags & FLAG_SATURATE > 0) {
+                    return scaleUpSaturating(a, uint8(ooms));
                 } else {
-                    return scaleUp(a_, uint8(scaleBy_));
+                    return scaleUp(a, uint8(ooms));
                 }
-            } else if (scaleBy_ < 0) {
-                // We know that scaleBy_ is negative here, so we can convert it
+            } else if (ooms < 0) {
+                // We know that ooms is negative here, so we can convert it
                 // to an absolute value with bitwise NOT + 1.
                 // This is slightly less gas than multiplying by negative 1 and
                 // casting it, and handles the case of -128 without overflow.
-                uint8 scaleDownBy_ = uint8(~scaleBy_) + 1;
-                if (flags_ & FLAG_ROUND_UP > 0) {
-                    return scaleDownRoundUp(a_, scaleDownBy_);
+                uint8 scaleDownBy = uint8(~ooms) + 1;
+                if (flags & FLAG_ROUND_UP > 0) {
+                    return scaleDownRoundUp(a, scaleDownBy);
                 } else {
-                    return scaleDown(a_, scaleDownBy_);
+                    return scaleDown(a, scaleDownBy);
                 }
             } else {
-                return a_;
-            }
-        }
-    }
-
-    /// Scale an 18 decimal fixed point ratio of a_:b_ according to the decimals
-    /// of a and b that each MAY NOT be 18.
-    /// i.e. a subsequent call to `a_.fixedPointMul(ratio_)` would yield the
-    /// value that it would have as though `a_` and `b_` were both 18 decimals
-    /// and we hadn't rescaled the ratio.
-    ///
-    /// This is similar to `scaleBy` that calcualates the OOMs to scale by as
-    /// `bDecimals_ - aDecimals_`.
-    ///
-    /// @param ratio_ The ratio to be scaled.
-    /// @param aDecimals_ The decimals of the ratio numerator.
-    /// @param bDecimals_ The decimals of the ratio denominator.
-    /// @param flags_ Controls rounding and saturating.
-    function scaleRatio(uint256 ratio_, uint8 aDecimals_, uint8 bDecimals_, uint256 flags_)
-        internal
-        pure
-        returns (uint256)
-    {
-        unchecked {
-            if (bDecimals_ > aDecimals_) {
-                uint8 scaleUpBy_ = bDecimals_ - aDecimals_;
-                if (flags_ & FLAG_SATURATE > 0) {
-                    return scaleUpSaturating(ratio_, scaleUpBy_);
-                } else {
-                    return scaleUp(ratio_, scaleUpBy_);
-                }
-            } else if (aDecimals_ > bDecimals_) {
-                uint8 scaleDownBy_ = aDecimals_ - bDecimals_;
-                if (flags_ & FLAG_ROUND_UP > 0) {
-                    return scaleDownRoundUp(ratio_, scaleDownBy_);
-                } else {
-                    return scaleDown(ratio_, scaleDownBy_);
-                }
-            } else {
-                return ratio_;
+                return a;
             }
         }
     }

@@ -13,109 +13,109 @@ import "src/lib/FixedPointDecimalConstants.sol";
 /// so we MAY inline a lot of the logic which makes them WETter. The slow and
 /// fast version MAY be identical.
 library LibFixedPointDecimalScaleSlow {
-    function scaleUpSlow(uint256 a_, uint256 scaleUpBy_) internal pure returns (uint256) {
-        if (a_ == 0) {
+    function scaleUpSlow(uint256 a, uint256 scaleUpBy) internal pure returns (uint256) {
+        if (a == 0) {
             return 0;
         }
-        return a_ * (10 ** scaleUpBy_);
+        return a * (10 ** scaleUpBy);
     }
 
-    function scaleUpSaturatingSlow(uint256 a_, uint256 scaleUpBy_) internal pure returns (uint256) {
-        if (scaleUpBy_ >= OVERFLOW_RESCALE_OOMS) {
-            if (a_ == 0) {
+    function scaleUpSaturatingSlow(uint256 a, uint256 scaleUpBy) internal pure returns (uint256) {
+        if (scaleUpBy >= OVERFLOW_RESCALE_OOMS) {
+            if (a == 0) {
                 return 0;
             } else {
                 return type(uint256).max;
             }
         }
-        return SaturatingMath.saturatingMul(a_, 10 ** scaleUpBy_);
+        return SaturatingMath.saturatingMul(a, 10 ** scaleUpBy);
     }
 
-    function scaleDownSlow(uint256 a_, uint256 scaleDownBy_) internal pure returns (uint256) {
-        if (scaleDownBy_ >= OVERFLOW_RESCALE_OOMS) {
+    function scaleDownSlow(uint256 a, uint256 scaleDownBy) internal pure returns (uint256) {
+        if (scaleDownBy >= OVERFLOW_RESCALE_OOMS) {
             return 0;
         }
-        return a_ / (10 ** scaleDownBy_);
+        return a / (10 ** scaleDownBy);
     }
 
-    function scaleDownRoundUpSlow(uint256 a_, uint256 scaleDownBy_) internal pure returns (uint256) {
-        if (scaleDownBy_ >= OVERFLOW_RESCALE_OOMS) {
-            if (a_ == 0) {
+    function scaleDownRoundUpSlow(uint256 a, uint256 scaleDownBy) internal pure returns (uint256) {
+        if (scaleDownBy >= OVERFLOW_RESCALE_OOMS) {
+            if (a == 0) {
                 return 0;
             } else {
                 return 1;
             }
         }
-        uint256 b_ = (10 ** scaleDownBy_);
-        uint256 c_ = a_ / b_;
-        if (c_ * b_ != a_) {
+        uint256 b_ = (10 ** scaleDownBy);
+        uint256 c_ = a / b_;
+        if (c_ * b_ != a) {
             c_ += 1;
         }
         return c_;
     }
 
-    function scale18Slow(uint256 a_, uint256 decimals_, uint256 flags_) internal pure returns (uint256) {
-        if (FIXED_POINT_DECIMALS > decimals_) {
-            uint256 scaleUpBy_ = FIXED_POINT_DECIMALS - decimals_;
-            if (flags_ & FLAG_SATURATE != 0) {
-                return scaleUpSaturatingSlow(a_, scaleUpBy_);
+    function scale18Slow(uint256 a, uint256 decimals, uint256 flags) internal pure returns (uint256) {
+        if (FIXED_POINT_DECIMALS > decimals) {
+            uint256 scaleUpBy = FIXED_POINT_DECIMALS - decimals;
+            if (flags & FLAG_SATURATE != 0) {
+                return scaleUpSaturatingSlow(a, scaleUpBy);
             } else {
-                return scaleUpSlow(a_, scaleUpBy_);
+                return scaleUpSlow(a, scaleUpBy);
             }
         }
 
-        if (decimals_ > FIXED_POINT_DECIMALS) {
-            uint256 scaleDownBy_ = decimals_ - FIXED_POINT_DECIMALS;
-            if (flags_ & FLAG_ROUND_UP != 0) {
-                return scaleDownRoundUpSlow(a_, scaleDownBy_);
+        if (decimals > FIXED_POINT_DECIMALS) {
+            uint256 scaleDownBy = decimals - FIXED_POINT_DECIMALS;
+            if (flags & FLAG_ROUND_UP != 0) {
+                return scaleDownRoundUpSlow(a, scaleDownBy);
             } else {
-                return scaleDownSlow(a_, scaleDownBy_);
+                return scaleDownSlow(a, scaleDownBy);
             }
         }
 
-        return a_;
+        return a;
     }
 
-    function scaleNSlow(uint256 a_, uint256 decimals_, uint256 flags_) internal pure returns (uint256) {
-        if (FIXED_POINT_DECIMALS > decimals_) {
-            uint256 scaleDownBy_ = FIXED_POINT_DECIMALS - decimals_;
-            if (flags_ & FLAG_ROUND_UP != 0) {
-                return scaleDownRoundUpSlow(a_, scaleDownBy_);
+    function scaleNSlow(uint256 a, uint256 decimals, uint256 flags) internal pure returns (uint256) {
+        if (FIXED_POINT_DECIMALS > decimals) {
+            uint256 scaleDownBy = FIXED_POINT_DECIMALS - decimals;
+            if (flags & FLAG_ROUND_UP != 0) {
+                return scaleDownRoundUpSlow(a, scaleDownBy);
             } else {
-                return scaleDownSlow(a_, scaleDownBy_);
+                return scaleDownSlow(a, scaleDownBy);
             }
         }
 
-        if (decimals_ > FIXED_POINT_DECIMALS) {
-            uint256 scaleUpBy_ = decimals_ - FIXED_POINT_DECIMALS;
-            if (flags_ & FLAG_SATURATE != 0) {
-                return scaleUpSaturatingSlow(a_, scaleUpBy_);
+        if (decimals > FIXED_POINT_DECIMALS) {
+            uint256 scaleUpBy = decimals - FIXED_POINT_DECIMALS;
+            if (flags & FLAG_SATURATE != 0) {
+                return scaleUpSaturatingSlow(a, scaleUpBy);
             } else {
-                return scaleUpSlow(a_, scaleUpBy_);
+                return scaleUpSlow(a, scaleUpBy);
             }
         }
 
-        return a_;
+        return a;
     }
 
-    function scaleBySlow(uint256 a_, int8 scaleBy_, uint256 flags_) internal pure returns (uint256) {
-        if (scaleBy_ > 0) {
-            if (flags_ & FLAG_SATURATE != 0) {
-                return scaleUpSaturatingSlow(a_, uint8(scaleBy_));
+    function scaleBySlow(uint256 a, int8 ooms, uint256 flags) internal pure returns (uint256) {
+        if (ooms > 0) {
+            if (flags & FLAG_SATURATE != 0) {
+                return scaleUpSaturatingSlow(a, uint8(ooms));
             } else {
-                return scaleUpSlow(a_, uint8(scaleBy_));
+                return scaleUpSlow(a, uint8(ooms));
             }
         }
 
-        if (scaleBy_ < 0) {
-            uint8 scaleDownBy_ = scaleBy_ == -128 ? 128 : uint8(-1 * scaleBy_);
-            if (flags_ & FLAG_ROUND_UP != 0) {
-                return scaleDownRoundUpSlow(a_, scaleDownBy_);
+        if (ooms < 0) {
+            uint8 scaleDownBy = ooms == -128 ? 128 : uint8(-1 * ooms);
+            if (flags & FLAG_ROUND_UP != 0) {
+                return scaleDownRoundUpSlow(a, scaleDownBy);
             } else {
-                return scaleDownSlow(a_, scaleDownBy_);
+                return scaleDownSlow(a, scaleDownBy);
             }
         }
 
-        return a_;
+        return a;
     }
 }

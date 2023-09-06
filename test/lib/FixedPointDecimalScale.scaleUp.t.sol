@@ -8,42 +8,42 @@ import "./LibFixedPointDecimalScaleSlow.sol";
 
 contract FixedPointDecimalScaleTestScaleUp is Test {
     // Special case for scale = 0 is that input = output.
-    function testScaleUpBy0(uint256 a_) public {
-        assertEq(a_, LibFixedPointDecimalScale.scaleUp(a_, 0));
+    function testScaleUpBy0(uint256 a) public {
+        assertEq(a, LibFixedPointDecimalScale.scaleUp(a, 0));
     }
 
-    function testScaleUp0(uint256 scaleUpBy_) public {
+    function testScaleUp0(uint256 scaleUpBy) public {
         // scaling up 0 will never overflow.
-        assertEq(0, LibFixedPointDecimalScale.scaleUp(0, scaleUpBy_));
+        assertEq(0, LibFixedPointDecimalScale.scaleUp(0, scaleUpBy));
     }
 
-    function testScaleUp(uint256 a_, uint8 scaleUpBy_) public {
-        vm.assume(!LibWillOverflow.scaleUpWillOverflow(a_, scaleUpBy_));
+    function testScaleUp(uint256 a, uint8 scaleUpBy) public {
+        vm.assume(!LibWillOverflow.scaleUpWillOverflow(a, scaleUpBy));
 
         assertEq(
-            LibFixedPointDecimalScaleSlow.scaleUpSlow(a_, scaleUpBy_), LibFixedPointDecimalScale.scaleUp(a_, scaleUpBy_)
+            LibFixedPointDecimalScaleSlow.scaleUpSlow(a, scaleUpBy), LibFixedPointDecimalScale.scaleUp(a, scaleUpBy)
         );
     }
 
-    function testScaleUpOverflow(uint256 a_, uint8 scaleUpBy_) public {
-        vm.assume(LibWillOverflow.scaleUpWillOverflow(a_, scaleUpBy_));
+    function testScaleUpOverflow(uint256 a, uint8 scaleUpBy) public {
+        vm.assume(LibWillOverflow.scaleUpWillOverflow(a, scaleUpBy));
 
         vm.expectRevert(stdError.arithmeticError);
-        LibFixedPointDecimalScale.scaleUp(a_, scaleUpBy_);
+        LibFixedPointDecimalScale.scaleUp(a, scaleUpBy);
     }
 
-    function testScaleUpOverflowBoundary(uint256 a_) public {
-        vm.assume(a_ > 0);
+    function testScaleUpOverflowBoundary(uint256 a) public {
+        vm.assume(a > 0);
         vm.expectRevert(stdError.arithmeticError);
-        LibFixedPointDecimalScale.scaleUp(a_, OVERFLOW_RESCALE_OOMS);
+        LibFixedPointDecimalScale.scaleUp(a, OVERFLOW_RESCALE_OOMS);
     }
 
-    function testScaleUpSaturatingParity(uint256 a_, uint8 scaleUpBy_) public {
-        vm.assume(!LibWillOverflow.scaleUpWillOverflow(a_, scaleUpBy_));
+    function testScaleUpSaturatingParity(uint256 a, uint8 scaleUpBy) public {
+        vm.assume(!LibWillOverflow.scaleUpWillOverflow(a, scaleUpBy));
 
         assertEq(
-            LibFixedPointDecimalScale.scaleUp(a_, scaleUpBy_),
-            LibFixedPointDecimalScale.scaleUpSaturating(a_, scaleUpBy_)
+            LibFixedPointDecimalScale.scaleUp(a, scaleUpBy),
+            LibFixedPointDecimalScale.scaleUpSaturating(a, scaleUpBy)
         );
     }
 

@@ -8,34 +8,34 @@ import "./LibFixedPointDecimalScaleSlow.sol";
 
 contract FixedPointDecimalScaleTestScaleUpSaturating is Test {
     // Special case for scale = 0 is that input = output.
-    function testScaleUpSaturatingBy0(uint256 a_) public {
-        assertEq(a_, LibFixedPointDecimalScale.scaleUpSaturating(a_, 0));
+    function testScaleUpSaturatingBy0(uint256 a) public {
+        assertEq(a, LibFixedPointDecimalScale.scaleUpSaturating(a, 0));
     }
 
-    function testScaleUpSaturating0(uint256 scaleUpBy_) public {
-        assertEq(0, LibFixedPointDecimalScale.scaleUpSaturating(0, scaleUpBy_));
+    function testScaleUpSaturating0(uint256 scaleUpBy) public {
+        assertEq(0, LibFixedPointDecimalScale.scaleUpSaturating(0, scaleUpBy));
     }
 
-    function testScaleUpSaturatingReferenceImplementation(uint256 a_, uint8 scaleUpBy_) public {
+    function testScaleUpSaturatingReferenceImplementation(uint256 a, uint8 scaleUpBy) public {
         assertEq(
-            LibFixedPointDecimalScaleSlow.scaleUpSaturatingSlow(a_, scaleUpBy_),
-            LibFixedPointDecimalScale.scaleUpSaturating(a_, scaleUpBy_)
+            LibFixedPointDecimalScaleSlow.scaleUpSaturatingSlow(a, scaleUpBy),
+            LibFixedPointDecimalScale.scaleUpSaturating(a, scaleUpBy)
         );
     }
 
-    function testScaleUpSaturatingParity(uint256 a_, uint8 scaleUpBy_) public {
-        vm.assume(!LibWillOverflow.scaleUpWillOverflow(a_, scaleUpBy_));
+    function testScaleUpSaturatingParity(uint256 a, uint8 scaleUpBy) public {
+        vm.assume(!LibWillOverflow.scaleUpWillOverflow(a, scaleUpBy));
 
         assertEq(
-            LibFixedPointDecimalScale.scaleUp(a_, scaleUpBy_),
-            LibFixedPointDecimalScale.scaleUpSaturating(a_, scaleUpBy_)
+            LibFixedPointDecimalScale.scaleUp(a, scaleUpBy),
+            LibFixedPointDecimalScale.scaleUpSaturating(a, scaleUpBy)
         );
     }
 
-    function testScaleUpSaturatingSaturates(uint256 a_, uint8 scaleUpBy_) public {
-        vm.assume(LibWillOverflow.scaleUpWillOverflow(a_, scaleUpBy_));
+    function testScaleUpSaturatingSaturates(uint256 a, uint8 scaleUpBy) public {
+        vm.assume(LibWillOverflow.scaleUpWillOverflow(a, scaleUpBy));
 
-        assertEq(type(uint256).max, LibFixedPointDecimalScale.scaleUpSaturating(a_, scaleUpBy_));
+        assertEq(type(uint256).max, LibFixedPointDecimalScale.scaleUpSaturating(a, scaleUpBy));
     }
 
     function testScaleUpSaturatingGas0() public pure {

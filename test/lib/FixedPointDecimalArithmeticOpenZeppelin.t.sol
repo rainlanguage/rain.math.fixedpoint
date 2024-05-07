@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: CAL
-pragma solidity ^0.8.18;
+pragma solidity =0.8.25;
 
 import "forge-std/Test.sol";
 import {Math} from "openzeppelin-contracts/contracts/utils/math/Math.sol";
@@ -10,7 +10,7 @@ import "src/lib/LibWillOverflow.sol";
 contract FixedPointDecimalArithmeticOpenZeppelinTest is Test {
     /// Not much to test because we're just wrapping OZ.
     function testFixedPointMul(uint256 a, uint256 b, uint8 roundingInt) external {
-        vm.assume(roundingInt < 3);
+        roundingInt = uint8(bound(roundingInt, 0, 2));
         vm.assume(!LibWillOverflow.mulDivWillOverflow(a, b, 1e18));
         Math.Rounding rounding = Math.Rounding(roundingInt);
         assertEq(
@@ -19,7 +19,7 @@ contract FixedPointDecimalArithmeticOpenZeppelinTest is Test {
     }
 
     function testFixedPointMulOverflow(uint256 a, uint256 b, uint8 roundingInt) external {
-        vm.assume(roundingInt < 3);
+        roundingInt = uint8(bound(roundingInt, 0, 2));
         vm.assume(LibWillOverflow.mulDivWillOverflow(a, b, 1e18));
         Math.Rounding rounding = Math.Rounding(roundingInt);
 
@@ -29,7 +29,7 @@ contract FixedPointDecimalArithmeticOpenZeppelinTest is Test {
 
     /// Not much to test because we're just wrapping OZ.
     function testFixedPointDiv(uint256 a, uint256 b, uint8 roundingInt) external {
-        vm.assume(roundingInt < 3);
+        roundingInt = uint8(bound(roundingInt, 0, 2));
         vm.assume(!LibWillOverflow.mulDivWillOverflow(a, 1e18, b));
         Math.Rounding rounding = Math.Rounding(roundingInt);
         assertEq(
@@ -38,7 +38,7 @@ contract FixedPointDecimalArithmeticOpenZeppelinTest is Test {
     }
 
     function testFixedPointDivOverflow(uint256 a, uint256 b, uint8 roundingInt) external {
-        vm.assume(roundingInt < 3);
+        roundingInt = uint8(bound(roundingInt, 0, 2));
         vm.assume(LibWillOverflow.mulDivWillOverflow(a, 1e18, b));
         Math.Rounding rounding = Math.Rounding(roundingInt);
 

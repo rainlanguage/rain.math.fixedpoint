@@ -1,10 +1,15 @@
 // SPDX-License-Identifier: CAL
-pragma solidity ^0.8.18;
+pragma solidity =0.8.25;
 
-import "forge-std/Test.sol";
-import "src/lib/LibWillOverflow.sol";
-import "src/lib/LibFixedPointDecimalScale.sol";
-import "./LibFixedPointDecimalScaleSlow.sol";
+import {Test, stdError} from "forge-std/Test.sol";
+import {LibWillOverflow, FLAG_MAX_INT} from "src/lib/LibWillOverflow.sol";
+import {
+    LibFixedPointDecimalScale,
+    FLAG_SATURATE,
+    FIXED_POINT_DECIMALS,
+    FLAG_ROUND_UP
+} from "src/lib/LibFixedPointDecimalScale.sol";
+import {LibFixedPointDecimalScaleSlow} from "./LibFixedPointDecimalScaleSlow.sol";
 
 contract FixedPointDecimalScaleTestScale18 is Test {
     function testScale18ReferenceImplementation(uint256 a, uint256 decimals, uint256 flags) public {

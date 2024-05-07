@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: CAL
-pragma solidity =0.8.19;
+pragma solidity =0.8.23;
 
 import "rain.math.saturating/SaturatingMath.sol";
 import "src/lib/FixedPointDecimalConstants.sol";

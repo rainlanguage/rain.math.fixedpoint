@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: CAL
-pragma solidity =0.8.19;
+pragma solidity =0.8.23;
 
 import {Test, stdError} from "forge-std/Test.sol";
 import {LibWillOverflow, FLAG_MAX_INT} from "src/lib/LibWillOverflow.sol";

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: CAL
-pragma solidity ^0.8.18;
+pragma solidity =0.8.19;
 
 import {Test} from "forge-std/Test.sol";
 import {LibFixedPointDecimalScale} from "src/lib/LibFixedPointDecimalScale.sol";

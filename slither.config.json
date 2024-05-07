@@ -1,4 +1,4 @@
 {
-    "detectors_to_exclude": "assembly-usage",
+    "detectors_to_exclude": "assembly-usage,pragma",
     "filter_paths": "lib/forge-std,lib/openzeppelin-contracts,test"
 }

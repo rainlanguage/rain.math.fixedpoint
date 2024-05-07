@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: CAL
 pragma solidity ^0.8.18;
 
-import "./FixedPointDecimalConstants.sol";
+import {FIXED_POINT_ONE} from "./FixedPointDecimalConstants.sol";
 
 /// @title FixedPointDecimalScale
 /// @notice Tools to scale unsigned values to/from 18 decimal fixed point
@@ -204,6 +204,19 @@ library LibFixedPointDecimalScale {
             } else {
                 return a;
             }
+        }
+    }
+
+    /// Scale an 18 decimal fixed point number to 0 (i.e. an integer) losslessly.
+    /// Reverts if the conversion would be lossy.
+    /// @param a An 18 decimal fixed point number.
+    /// @return `a` scaled to 0 decimals.
+    function scaleToIntegerLossless(uint256 a) internal pure returns (uint256) {
+        unchecked {
+            if (a % FIXED_POINT_ONE != 0) {
+                revert("LibFixedPointDecimalScale: lossy conversion");
+            }
+            return a / FIXED_POINT_ONE;
         }
     }
 }

@@ -1,7 +1,14 @@
 // SPDX-License-Identifier: CAL
 pragma solidity ^0.8.18;
 
-import {FIXED_POINT_ONE} from "./FixedPointDecimalConstants.sol";
+import {
+    FIXED_POINT_ONE,
+    FLAG_SATURATE,
+    FLAG_ROUND_UP,
+    FIXED_POINT_DECIMALS,
+    OVERFLOW_RESCALE_OOMS
+} from "./FixedPointDecimalConstants.sol";
+import {ErrScaleDownPrecisionLoss} from "../err/ErrScale.sol";
 
 /// @title FixedPointDecimalScale
 /// @notice Tools to scale unsigned values to/from 18 decimal fixed point
@@ -214,7 +221,7 @@ library LibFixedPointDecimalScale {
     function scaleToIntegerLossless(uint256 a) internal pure returns (uint256) {
         unchecked {
             if (a % FIXED_POINT_ONE != 0) {
-                revert("LibFixedPointDecimalScale: lossy conversion");
+                revert ErrScaleDownPrecisionLoss(a);
             }
             return a / FIXED_POINT_ONE;
         }

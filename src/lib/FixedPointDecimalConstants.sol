@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: CAL
-pragma solidity ^0.8.23;
+pragma solidity ^0.8.25;
 
 /// @dev The scale of all fixed point math. This is adopting the conventions of
 /// both ETH (wei) and most ERC20 tokens, so is hopefully uncontroversial.

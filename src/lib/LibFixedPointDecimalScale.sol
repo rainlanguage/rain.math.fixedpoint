@@ -8,7 +8,7 @@ import {
     FIXED_POINT_DECIMALS,
     OVERFLOW_RESCALE_OOMS
 } from "./FixedPointDecimalConstants.sol";
-import {ErrScaleDownPrecisionLoss, IntegerOverflow} from "../err/ErrScale.sol";
+import {ErrScaleDownPrecisionLoss, IntegerOverflow} from "../error/ErrScale.sol";
 
 /// @title FixedPointDecimalScale
 /// @notice Tools to scale unsigned values to/from 18 decimal fixed point

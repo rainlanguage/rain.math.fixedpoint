@@ -8,7 +8,7 @@ import {
     FIXED_POINT_DECIMALS,
     OVERFLOW_RESCALE_OOMS
 } from "./FixedPointDecimalConstants.sol";
-import {ErrScaleDownPrecisionLoss} from "../err/ErrScale.sol";
+import {ErrScaleDownPrecisionLoss, IntegerOverflow} from "../err/ErrScale.sol";
 
 /// @title FixedPointDecimalScale
 /// @notice Tools to scale unsigned values to/from 18 decimal fixed point
@@ -214,7 +214,8 @@ library LibFixedPointDecimalScale {
         }
     }
 
-    /// Scale an 18 decimal fixed point number to 0 (i.e. an integer) losslessly.
+    /// Scale an 18 decimal fixed point number to scale 0 (i.e. an integer)
+    /// losslessly.
     /// Reverts if the conversion would be lossy.
     /// @param a An 18 decimal fixed point number.
     /// @return `a` scaled to 0 decimals.
@@ -225,5 +226,32 @@ library LibFixedPointDecimalScale {
             }
             return a / FIXED_POINT_ONE;
         }
+    }
+
+    /// Detect whether some value is a fixed point decimal or an integer and
+    /// convert it to an integer if it is a decimal.
+    ///
+    /// The detection process assumes that anything greater than or equal to
+    /// `FIXED_POINT_ONE` is a fixed point decimal and NOT some large integer.
+    ///
+    /// The caller is responsible for ensuring that the range of valid integers
+    /// never overlaps with the range of valid fixed point decimals that could
+    /// be interpreted as integers. I.e. `max` should be less than `1e18`.
+    ///
+    /// Uses lossless conversion to integer for fixed point decimals, so will
+    /// error if decimals are not a multiple of `FIXED_POINT_ONE`.
+    ///
+    /// @param a The value to convert to an integer.
+    /// @param max The maximum value that `a` can be. MUST be less than `1e18`.
+    function decimalOrIntToInt(uint256 a, uint256 max) internal pure returns (uint256) {
+        if (a >= FIXED_POINT_ONE) {
+            a = scaleToIntegerLossless(a);
+        }
+
+        if (a > max) {
+            revert IntegerOverflow(a, max);
+        }
+
+        return a;
     }
 }

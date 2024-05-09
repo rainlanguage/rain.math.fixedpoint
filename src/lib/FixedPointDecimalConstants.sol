@@ -19,3 +19,7 @@ uint256 constant FLAG_MAX_INT = FLAG_SATURATE | FLAG_ROUND_UP;
 
 /// @dev Can't represent this many OOMs of decimals in `uint256`.
 uint256 constant OVERFLOW_RESCALE_OOMS = 78;
+
+/// @dev The maximum value that an integer can be without being misinterpreted
+/// as a fixed point decimal, for the purposes of `decimalOrIntToInt`.
+uint256 constant DECIMAL_MAX_SAFE_INT = 1e18 - 1;

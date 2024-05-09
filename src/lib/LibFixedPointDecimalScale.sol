@@ -6,7 +6,8 @@ import {
     FLAG_SATURATE,
     FLAG_ROUND_UP,
     FIXED_POINT_DECIMALS,
-    OVERFLOW_RESCALE_OOMS
+    OVERFLOW_RESCALE_OOMS,
+    DECIMAL_MAX_SAFE_INT
 } from "./FixedPointDecimalConstants.sol";
 import {ErrScaleDownPrecisionLoss, IntegerOverflow} from "../error/ErrScale.sol";
 

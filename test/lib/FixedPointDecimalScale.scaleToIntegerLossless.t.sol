@@ -3,7 +3,7 @@ pragma solidity =0.8.25;
 
 import {Test} from "forge-std/Test.sol";
 import {LibFixedPointDecimalScale} from "src/lib/LibFixedPointDecimalScale.sol";
-import {ErrScaleDownPrecisionLoss} from "src/err/ErrScale.sol";
+import {ErrScaleDownPrecisionLoss} from "src/error/ErrScale.sol";
 
 contract FixedPointDecimalScaleScaleToIntegerLosslessTest is Test {
     function testScaleToIntegerLossless(uint256 a) external {

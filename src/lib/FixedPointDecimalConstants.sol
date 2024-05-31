@@ -23,3 +23,7 @@ uint256 constant OVERFLOW_RESCALE_OOMS = 78;
 /// @dev The maximum value that an integer can be without being misinterpreted
 /// as a fixed point decimal, for the purposes of `decimalOrIntToInt`.
 uint256 constant DECIMAL_MAX_SAFE_INT = 1e18 - 1;
+
+/// @dev The mathematical constant e, scaled to `FIXED_POINT_DECIMALS` decimals.
+/// https://en.wikipedia.org/wiki/E_(mathematical_constant)
+uint256 constant FIXED_POINT_E = 2.718281828459045235e18;

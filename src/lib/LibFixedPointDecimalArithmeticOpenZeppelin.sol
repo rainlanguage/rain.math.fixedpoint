@@ -1,9 +1,10 @@
-// SPDX-License-Identifier: CAL
+// SPDX-License-Identifier: LicenseRef-DCL-1.0
+// SPDX-FileCopyrightText: Copyright (c) 2020 thedavidmeister
 pragma solidity ^0.8.25;
 
 import {Math} from "openzeppelin-contracts/contracts/utils/math/Math.sol";
 
-import "./FixedPointDecimalConstants.sol";
+import {FIXED_POINT_ONE} from "./FixedPointDecimalConstants.sol";
 
 library LibFixedPointDecimalArithmeticOpenZeppelin {
     using Math for uint256;

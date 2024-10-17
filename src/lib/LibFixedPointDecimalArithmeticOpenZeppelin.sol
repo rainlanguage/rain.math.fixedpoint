@@ -4,7 +4,7 @@ pragma solidity ^0.8.25;
 
 import {Math} from "openzeppelin-contracts/contracts/utils/math/Math.sol";
 
-import "./FixedPointDecimalConstants.sol";
+import {FIXED_POINT_ONE} from "./FixedPointDecimalConstants.sol";
 
 library LibFixedPointDecimalArithmeticOpenZeppelin {
     using Math for uint256;

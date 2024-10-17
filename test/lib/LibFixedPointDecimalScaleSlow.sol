@@ -52,12 +52,12 @@ library LibFixedPointDecimalScaleSlow {
                 return 1;
             }
         }
-        uint256 b_ = (10 ** scaleDownBy);
-        uint256 c_ = a / b_;
-        if (c_ * b_ != a) {
-            c_ += 1;
+        uint256 b = (10 ** scaleDownBy);
+        uint256 c = a / b;
+        if (c * b != a) {
+            c += 1;
         }
-        return c_;
+        return c;
     }
 
     function scale18Slow(uint256 a, uint256 decimals, uint256 flags) internal pure returns (uint256) {

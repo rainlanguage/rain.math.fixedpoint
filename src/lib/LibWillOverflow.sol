@@ -2,7 +2,13 @@
 // SPDX-FileCopyrightText: Copyright (c) 2020 thedavidmeister
 pragma solidity ^0.8.25;
 
-import "./FixedPointDecimalConstants.sol";
+import {
+    FLAG_MAX_INT,
+    FLAG_ROUND_UP,
+    FLAG_SATURATE,
+    OVERFLOW_RESCALE_OOMS,
+    FIXED_POINT_DECIMALS
+} from "./FixedPointDecimalConstants.sol";
 
 /// @title LibWillOverflow
 /// @notice Often we want to know if some calculation is expected to overflow.

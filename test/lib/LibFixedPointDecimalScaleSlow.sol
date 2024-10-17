@@ -3,7 +3,12 @@
 pragma solidity =0.8.25;
 
 import {LibSaturatingMath} from "rain.math.saturating/lib/LibSaturatingMath.sol";
-import {FIXED_POINT_DECIMALS, FLAG_ROUND_UP, OVERFLOW_RESCALE_OOMS, FLAG_SATURATE} from "src/lib/FixedPointDecimalConstants.sol";
+import {
+    FIXED_POINT_DECIMALS,
+    FLAG_ROUND_UP,
+    OVERFLOW_RESCALE_OOMS,
+    FLAG_SATURATE
+} from "src/lib/FixedPointDecimalConstants.sol";
 
 /// @title FixedPointDecimalScaleSlow
 /// @notice Slow but more obviously correct versions of all functions in

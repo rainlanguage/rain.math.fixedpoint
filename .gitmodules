@@ -1,6 +1,3 @@
-[submodule "lib/rain.math.saturating"]
-	path = lib/rain.math.saturating
-	url = https://github.com/rainprotocol/rain.math.saturating
 [submodule "lib/forge-std"]
 	path = lib/forge-std
 	url = https://github.com/foundry-rs/forge-std

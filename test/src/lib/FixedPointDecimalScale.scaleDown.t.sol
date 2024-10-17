@@ -1,20 +1,21 @@
-// SPDX-License-Identifier: CAL
+// SPDX-License-Identifier: LicenseRef-DCL-1.0
+// SPDX-FileCopyrightText: Copyright (c) 2020 thedavidmeister
 pragma solidity =0.8.25;
 
-import "forge-std/Test.sol";
-import "src/lib/LibFixedPointDecimalScale.sol";
-import "src/lib/LibWillOverflow.sol";
-import "./LibFixedPointDecimalScaleSlow.sol";
+import {Test} from "forge-std/Test.sol";
+import {LibFixedPointDecimalScale} from "src/lib/LibFixedPointDecimalScale.sol";
+import {LibWillOverflow, OVERFLOW_RESCALE_OOMS} from "src/lib/LibWillOverflow.sol";
+import {LibFixedPointDecimalScaleSlow} from "test/lib/LibFixedPointDecimalScaleSlow.sol";
 
 contract FixedPointDecimalScaleTestScaleDown is Test {
-    function testScaleDownReferenceImplementation(uint256 a, uint8 scaleDownBy) public {
+    function testScaleDownReferenceImplementation(uint256 a, uint8 scaleDownBy) public pure {
         assertEq(
             LibFixedPointDecimalScaleSlow.scaleDownSlow(a, scaleDownBy),
             LibFixedPointDecimalScale.scaleDown(a, scaleDownBy)
         );
     }
 
-    function testScaleDownNoRound(uint256 a, uint8 scaleDownBy) public {
+    function testScaleDownNoRound(uint256 a, uint8 scaleDownBy) public pure {
         vm.assume(!LibWillOverflow.scaleDownWillRound(a, scaleDownBy));
 
         assertEq(
@@ -23,7 +24,7 @@ contract FixedPointDecimalScaleTestScaleDown is Test {
         );
     }
 
-    function testScaleDownRoundDiff(uint256 a, uint8 scaleDownBy) public {
+    function testScaleDownRoundDiff(uint256 a, uint8 scaleDownBy) public pure {
         vm.assume(LibWillOverflow.scaleDownWillRound(a, scaleDownBy));
 
         assertEq(
@@ -32,17 +33,17 @@ contract FixedPointDecimalScaleTestScaleDown is Test {
         );
     }
 
-    function testScaleDownOverflow(uint256 a, uint256 scaleDownBy) public {
+    function testScaleDownOverflow(uint256 a, uint256 scaleDownBy) public pure {
         vm.assume(scaleDownBy >= OVERFLOW_RESCALE_OOMS);
 
         assertEq(0, LibFixedPointDecimalScale.scaleDown(a, scaleDownBy));
     }
 
-    function testScaleDownBy0(uint256 a) public {
+    function testScaleDownBy0(uint256 a) public pure {
         assertEq(a, LibFixedPointDecimalScale.scaleDown(a, 0));
     }
 
-    function testScaleDown0(uint256 scaleDownBy) public {
+    function testScaleDown0(uint256 scaleDownBy) public pure {
         assertEq(0, LibFixedPointDecimalScale.scaleDown(0, scaleDownBy));
     }
 

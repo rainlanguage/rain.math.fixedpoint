@@ -1,37 +1,38 @@
-// SPDX-License-Identifier: CAL
+// SPDX-License-Identifier: LicenseRef-DCL-1.0
+// SPDX-FileCopyrightText: Copyright (c) 2020 thedavidmeister
 pragma solidity =0.8.25;
 
-import "forge-std/Test.sol";
-import "src/lib/LibFixedPointDecimalScale.sol";
-import "src/lib/LibWillOverflow.sol";
-import "./LibFixedPointDecimalScaleSlow.sol";
+import {Test} from "forge-std/Test.sol";
+import {LibFixedPointDecimalScale} from "src/lib/LibFixedPointDecimalScale.sol";
+import {LibWillOverflow, OVERFLOW_RESCALE_OOMS} from "src/lib/LibWillOverflow.sol";
+import {LibFixedPointDecimalScaleSlow} from "test/lib/LibFixedPointDecimalScaleSlow.sol";
 
 contract FixedPointDecimalScaleTestScaleDown is Test {
-    function testScaleDownReferenceImplementation(uint256 a, uint8 scaleDownBy) public {
+    function testScaleDownReferenceImplementation(uint256 a, uint8 scaleDownBy) public pure {
         assertEq(
             LibFixedPointDecimalScaleSlow.scaleDownRoundUpSlow(a, scaleDownBy),
             LibFixedPointDecimalScale.scaleDownRoundUp(a, scaleDownBy)
         );
     }
 
-    function testScaleDownRoundUpOverflow(uint256 a, uint256 scaleDownBy) public {
+    function testScaleDownRoundUpOverflow(uint256 a, uint256 scaleDownBy) public pure {
         vm.assume(a > 0);
         vm.assume(scaleDownBy >= OVERFLOW_RESCALE_OOMS);
 
         assertEq(1, LibFixedPointDecimalScale.scaleDownRoundUp(a, scaleDownBy));
     }
 
-    function testScaleDownRoundUpOverflow0(uint256 scaleDownBy) public {
+    function testScaleDownRoundUpOverflow0(uint256 scaleDownBy) public pure {
         vm.assume(scaleDownBy >= OVERFLOW_RESCALE_OOMS);
 
         assertEq(0, LibFixedPointDecimalScale.scaleDownRoundUp(0, scaleDownBy));
     }
 
-    function testScaleDownBy0(uint256 a) public {
+    function testScaleDownBy0(uint256 a) public pure {
         assertEq(a, LibFixedPointDecimalScale.scaleDownRoundUp(a, 0));
     }
 
-    function testScaleDown0(uint256 scaleDownBy) public {
+    function testScaleDown0(uint256 scaleDownBy) public pure {
         assertEq(0, LibFixedPointDecimalScale.scaleDownRoundUp(0, scaleDownBy));
     }
 

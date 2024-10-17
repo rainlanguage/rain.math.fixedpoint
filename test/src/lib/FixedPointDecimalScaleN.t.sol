@@ -1,13 +1,14 @@
-// SPDX-License-Identifier: CAL
+// SPDX-License-Identifier: LicenseRef-DCL-1.0
+// SPDX-FileCopyrightText: Copyright (c) 2020 thedavidmeister
 pragma solidity =0.8.25;
 
-import "forge-std/Test.sol";
-import "src/lib/LibWillOverflow.sol";
-import "src/lib/LibFixedPointDecimalScale.sol";
-import "./LibFixedPointDecimalScaleSlow.sol";
+import {Test, stdError} from "forge-std/Test.sol";
+import {LibWillOverflow, FLAG_MAX_INT, FLAG_SATURATE, FLAG_ROUND_UP} from "src/lib/LibWillOverflow.sol";
+import {LibFixedPointDecimalScale, FIXED_POINT_DECIMALS} from "src/lib/LibFixedPointDecimalScale.sol";
+import {LibFixedPointDecimalScaleSlow} from "test/lib/LibFixedPointDecimalScaleSlow.sol";
 
 contract FixedPointDecimalScaleTestScaleN is Test {
-    function testScaleNReferenceImplementation(uint256 a, uint256 decimals, uint256 flags) public {
+    function testScaleNReferenceImplementation(uint256 a, uint256 decimals, uint256 flags) public pure {
         vm.assume(flags <= FLAG_MAX_INT);
         vm.assume(!LibWillOverflow.scaleNWillOverflow(a, decimals, flags));
 
@@ -17,12 +18,12 @@ contract FixedPointDecimalScaleTestScaleN is Test {
         );
     }
 
-    function testScaleN18(uint256 a, uint256 flags) public {
+    function testScaleN18(uint256 a, uint256 flags) public pure {
         vm.assume(flags <= FLAG_MAX_INT);
         assertEq(a, LibFixedPointDecimalScale.scale18(a, FIXED_POINT_DECIMALS, flags));
     }
 
-    function testScaleNLt18(uint256 a, uint8 targetDecimals, uint256 flags) public {
+    function testScaleNLt18(uint256 a, uint8 targetDecimals, uint256 flags) public pure {
         // Only keep saturating flags.
         flags = flags & FLAG_SATURATE;
         vm.assume(targetDecimals < FIXED_POINT_DECIMALS);
@@ -35,7 +36,7 @@ contract FixedPointDecimalScaleTestScaleN is Test {
         );
     }
 
-    function testScaleNLt18RoundUp(uint256 a, uint8 targetDecimals, uint256 flags) public {
+    function testScaleNLt18RoundUp(uint256 a, uint8 targetDecimals, uint256 flags) public pure {
         // Keep saturating flags.
         flags = FLAG_ROUND_UP | flags & FLAG_SATURATE;
         vm.assume(targetDecimals < FIXED_POINT_DECIMALS);
@@ -48,7 +49,7 @@ contract FixedPointDecimalScaleTestScaleN is Test {
         );
     }
 
-    function testScaleNGt18(uint256 a, uint8 targetDecimals, uint256 flags) public {
+    function testScaleNGt18(uint256 a, uint8 targetDecimals, uint256 flags) public pure {
         // Keep rounding flag
         flags = flags & FLAG_ROUND_UP;
         vm.assume(targetDecimals > FIXED_POINT_DECIMALS);
@@ -73,7 +74,7 @@ contract FixedPointDecimalScaleTestScaleN is Test {
         LibFixedPointDecimalScale.scaleN(a, targetDecimals, flags);
     }
 
-    function testScaleNGt18Saturate(uint256 a, uint8 targetDecimals, uint256 flags) public {
+    function testScaleNGt18Saturate(uint256 a, uint8 targetDecimals, uint256 flags) public pure {
         // Keep rounding flag
         flags = FLAG_SATURATE | flags & FLAG_ROUND_UP;
         vm.assume(targetDecimals > FIXED_POINT_DECIMALS);

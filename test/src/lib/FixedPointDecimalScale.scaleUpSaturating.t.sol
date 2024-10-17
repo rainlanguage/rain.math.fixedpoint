@@ -1,29 +1,30 @@
-// SPDX-License-Identifier: CAL
+// SPDX-License-Identifier: LicenseRef-DCL-1.0
+// SPDX-FileCopyrightText: Copyright (c) 2020 thedavidmeister
 pragma solidity =0.8.25;
 
-import "forge-std/Test.sol";
-import "src/lib/LibWillOverflow.sol";
-import "src/lib/LibFixedPointDecimalScale.sol";
-import "./LibFixedPointDecimalScaleSlow.sol";
+import {Test} from "forge-std/Test.sol";
+import {LibWillOverflow} from "src/lib/LibWillOverflow.sol";
+import {LibFixedPointDecimalScale} from "src/lib/LibFixedPointDecimalScale.sol";
+import {LibFixedPointDecimalScaleSlow} from "test/lib/LibFixedPointDecimalScaleSlow.sol";
 
 contract FixedPointDecimalScaleTestScaleUpSaturating is Test {
     // Special case for scale = 0 is that input = output.
-    function testScaleUpSaturatingBy0(uint256 a) public {
+    function testScaleUpSaturatingBy0(uint256 a) public pure {
         assertEq(a, LibFixedPointDecimalScale.scaleUpSaturating(a, 0));
     }
 
-    function testScaleUpSaturating0(uint256 scaleUpBy) public {
+    function testScaleUpSaturating0(uint256 scaleUpBy) public pure {
         assertEq(0, LibFixedPointDecimalScale.scaleUpSaturating(0, scaleUpBy));
     }
 
-    function testScaleUpSaturatingReferenceImplementation(uint256 a, uint8 scaleUpBy) public {
+    function testScaleUpSaturatingReferenceImplementation(uint256 a, uint8 scaleUpBy) public pure {
         assertEq(
             LibFixedPointDecimalScaleSlow.scaleUpSaturatingSlow(a, scaleUpBy),
             LibFixedPointDecimalScale.scaleUpSaturating(a, scaleUpBy)
         );
     }
 
-    function testScaleUpSaturatingParity(uint256 a, uint8 scaleUpBy) public {
+    function testScaleUpSaturatingParity(uint256 a, uint8 scaleUpBy) public pure {
         vm.assume(!LibWillOverflow.scaleUpWillOverflow(a, scaleUpBy));
 
         assertEq(
@@ -31,7 +32,7 @@ contract FixedPointDecimalScaleTestScaleUpSaturating is Test {
         );
     }
 
-    function testScaleUpSaturatingSaturates(uint256 a, uint8 scaleUpBy) public {
+    function testScaleUpSaturatingSaturates(uint256 a, uint8 scaleUpBy) public pure {
         vm.assume(LibWillOverflow.scaleUpWillOverflow(a, scaleUpBy));
 
         assertEq(type(uint256).max, LibFixedPointDecimalScale.scaleUpSaturating(a, scaleUpBy));

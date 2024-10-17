@@ -1,23 +1,24 @@
-// SPDX-License-Identifier: CAL
+// SPDX-License-Identifier: LicenseRef-DCL-1.0
+// SPDX-FileCopyrightText: Copyright (c) 2020 thedavidmeister
 pragma solidity =0.8.25;
 
-import "forge-std/Test.sol";
-import "src/lib/LibWillOverflow.sol";
-import "src/lib/LibFixedPointDecimalScale.sol";
-import "./LibFixedPointDecimalScaleSlow.sol";
+import {Test, stdError} from "forge-std/Test.sol";
+import {LibWillOverflow, OVERFLOW_RESCALE_OOMS} from "src/lib/LibWillOverflow.sol";
+import {LibFixedPointDecimalScale} from "src/lib/LibFixedPointDecimalScale.sol";
+import {LibFixedPointDecimalScaleSlow} from "test/lib/LibFixedPointDecimalScaleSlow.sol";
 
 contract FixedPointDecimalScaleTestScaleUp is Test {
     // Special case for scale = 0 is that input = output.
-    function testScaleUpBy0(uint256 a) public {
+    function testScaleUpBy0(uint256 a) public pure {
         assertEq(a, LibFixedPointDecimalScale.scaleUp(a, 0));
     }
 
-    function testScaleUp0(uint256 scaleUpBy) public {
+    function testScaleUp0(uint256 scaleUpBy) public pure {
         // scaling up 0 will never overflow.
         assertEq(0, LibFixedPointDecimalScale.scaleUp(0, scaleUpBy));
     }
 
-    function testScaleUp(uint256 a, uint8 scaleUpBy) public {
+    function testScaleUp(uint256 a, uint8 scaleUpBy) public pure {
         vm.assume(!LibWillOverflow.scaleUpWillOverflow(a, scaleUpBy));
 
         assertEq(
@@ -38,7 +39,7 @@ contract FixedPointDecimalScaleTestScaleUp is Test {
         LibFixedPointDecimalScale.scaleUp(a, OVERFLOW_RESCALE_OOMS);
     }
 
-    function testScaleUpSaturatingParity(uint256 a, uint8 scaleUpBy) public {
+    function testScaleUpSaturatingParity(uint256 a, uint8 scaleUpBy) public pure {
         vm.assume(!LibWillOverflow.scaleUpWillOverflow(a, scaleUpBy));
 
         assertEq(

@@ -1,8 +1,9 @@
-// SPDX-License-Identifier: CAL
+// SPDX-License-Identifier: LicenseRef-DCL-1.0
+// SPDX-FileCopyrightText: Copyright (c) 2020 thedavidmeister
 pragma solidity =0.8.25;
 
-import "rain.math.saturating/SaturatingMath.sol";
-import "src/lib/FixedPointDecimalConstants.sol";
+import {LibSaturatingMath} from "rain.math.saturating/lib/LibSaturatingMath.sol";
+import {FIXED_POINT_DECIMALS, FLAG_ROUND_UP, OVERFLOW_RESCALE_OOMS, FLAG_SATURATE} from "src/lib/FixedPointDecimalConstants.sol";
 
 /// @title FixedPointDecimalScaleSlow
 /// @notice Slow but more obviously correct versions of all functions in
@@ -28,7 +29,7 @@ library LibFixedPointDecimalScaleSlow {
                 return type(uint256).max;
             }
         }
-        return SaturatingMath.saturatingMul(a, 10 ** scaleUpBy);
+        return LibSaturatingMath.saturatingMul(a, 10 ** scaleUpBy);
     }
 
     function scaleDownSlow(uint256 a, uint256 scaleDownBy) internal pure returns (uint256) {

@@ -1,4 +1,5 @@
-// SPDX-License-Identifier: CAL
+// SPDX-License-Identifier: LicenseRef-DCL-1.0
+// SPDX-FileCopyrightText: Copyright (c) 2020 thedavidmeister
 pragma solidity =0.8.25;
 
 import {Test, stdError} from "forge-std/Test.sol";
@@ -9,10 +10,10 @@ import {
     FIXED_POINT_DECIMALS,
     FLAG_ROUND_UP
 } from "src/lib/LibFixedPointDecimalScale.sol";
-import {LibFixedPointDecimalScaleSlow} from "./LibFixedPointDecimalScaleSlow.sol";
+import {LibFixedPointDecimalScaleSlow} from "test/lib/LibFixedPointDecimalScaleSlow.sol";
 
 contract FixedPointDecimalScaleTestScale18 is Test {
-    function testScale18ReferenceImplementation(uint256 a, uint256 decimals, uint256 flags) public {
+    function testScale18ReferenceImplementation(uint256 a, uint256 decimals, uint256 flags) public pure {
         vm.assume(flags <= FLAG_MAX_INT);
         vm.assume(!LibWillOverflow.scale18WillOverflow(a, decimals, flags));
 
@@ -22,12 +23,12 @@ contract FixedPointDecimalScaleTestScale18 is Test {
         );
     }
 
-    function testScale1818(uint256 a, uint256 flags) public {
+    function testScale1818(uint256 a, uint256 flags) public pure {
         vm.assume(flags <= FLAG_MAX_INT);
         assertEq(a, LibFixedPointDecimalScale.scale18(a, FIXED_POINT_DECIMALS, flags));
     }
 
-    function testScale18Lt(uint256 a, uint256 decimals, uint256 flags) public {
+    function testScale18Lt(uint256 a, uint256 decimals, uint256 flags) public pure {
         // Only keep rounding flags.
         flags = flags & FLAG_ROUND_UP;
         vm.assume(decimals < FIXED_POINT_DECIMALS);
@@ -54,7 +55,7 @@ contract FixedPointDecimalScaleTestScale18 is Test {
         LibFixedPointDecimalScale.scale18(a, decimals, flags);
     }
 
-    function testScale18LtSaturate(uint256 a, uint256 decimals, uint256 flags) public {
+    function testScale18LtSaturate(uint256 a, uint256 decimals, uint256 flags) public pure {
         // Keep rounding flags.
         flags = FLAG_SATURATE | (flags & FLAG_ROUND_UP);
         vm.assume(decimals < FIXED_POINT_DECIMALS);
@@ -67,7 +68,7 @@ contract FixedPointDecimalScaleTestScale18 is Test {
         );
     }
 
-    function testScale18Gt(uint256 a, uint8 decimals, uint256 flags) public {
+    function testScale18Gt(uint256 a, uint8 decimals, uint256 flags) public pure {
         // Keep saturate flags.
         flags = flags & FLAG_SATURATE;
         vm.assume(decimals > FIXED_POINT_DECIMALS);
@@ -79,7 +80,7 @@ contract FixedPointDecimalScaleTestScale18 is Test {
         );
     }
 
-    function testScale18GtRoundUp(uint256 a, uint8 decimals, uint256 flags) public {
+    function testScale18GtRoundUp(uint256 a, uint8 decimals, uint256 flags) public pure {
         // Keep saturate flags.
         flags = FLAG_ROUND_UP | (flags & FLAG_SATURATE);
         vm.assume(decimals > FIXED_POINT_DECIMALS);

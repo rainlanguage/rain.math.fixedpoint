@@ -1,15 +1,16 @@
-// SPDX-License-Identifier: CAL
+// SPDX-License-Identifier: LicenseRef-DCL-1.0
+// SPDX-FileCopyrightText: Copyright (c) 2020 thedavidmeister
 pragma solidity =0.8.25;
 
-import "forge-std/Test.sol";
+import {Test} from "forge-std/Test.sol";
 import {Math} from "openzeppelin-contracts/contracts/utils/math/Math.sol";
 
-import "src/lib/LibFixedPointDecimalArithmeticOpenZeppelin.sol";
-import "src/lib/LibWillOverflow.sol";
+import {LibFixedPointDecimalArithmeticOpenZeppelin} from "src/lib/LibFixedPointDecimalArithmeticOpenZeppelin.sol";
+import {LibWillOverflow} from "src/lib/LibWillOverflow.sol";
 
 contract FixedPointDecimalArithmeticOpenZeppelinTest is Test {
     /// Not much to test because we're just wrapping OZ.
-    function testFixedPointMul(uint256 a, uint256 b, uint8 roundingInt) external {
+    function testFixedPointMul(uint256 a, uint256 b, uint8 roundingInt) external pure {
         roundingInt = uint8(bound(roundingInt, 0, 2));
         vm.assume(!LibWillOverflow.mulDivWillOverflow(a, b, 1e18));
         Math.Rounding rounding = Math.Rounding(roundingInt);
@@ -28,7 +29,7 @@ contract FixedPointDecimalArithmeticOpenZeppelinTest is Test {
     }
 
     /// Not much to test because we're just wrapping OZ.
-    function testFixedPointDiv(uint256 a, uint256 b, uint8 roundingInt) external {
+    function testFixedPointDiv(uint256 a, uint256 b, uint8 roundingInt) external pure {
         roundingInt = uint8(bound(roundingInt, 0, 2));
         vm.assume(!LibWillOverflow.mulDivWillOverflow(a, 1e18, b));
         Math.Rounding rounding = Math.Rounding(roundingInt);

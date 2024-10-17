@@ -1,4 +1,5 @@
-// SPDX-License-Identifier: CAL
+// SPDX-License-Identifier: LicenseRef-DCL-1.0
+// SPDX-FileCopyrightText: Copyright (c) 2020 thedavidmeister
 pragma solidity =0.8.25;
 
 import {Test} from "forge-std/Test.sol";
@@ -8,7 +9,7 @@ import {IntegerOverflow, ErrScaleDownPrecisionLoss} from "src/error/ErrScale.sol
 
 contract FixedPointDecimalScaleDecimalOrIntToIntTest is Test {
     /// Test that decimalOrIntToInt rescales a decimal
-    function testDecimalOrIntToIntRescalesDecimal(uint256 a) external {
+    function testDecimalOrIntToIntRescalesDecimal(uint256 a) external pure {
         a = bound(a, 0, DECIMAL_MAX_SAFE_INT);
         a *= FIXED_POINT_ONE;
 
@@ -19,7 +20,7 @@ contract FixedPointDecimalScaleDecimalOrIntToIntTest is Test {
     }
 
     /// Test that decimalOrIntToInt does not rescale an integer
-    function testDecimalOrIntToIntNotRescalesInt(uint256 a) external {
+    function testDecimalOrIntToIntNotRescalesInt(uint256 a) external pure {
         a = bound(a, 0, DECIMAL_MAX_SAFE_INT);
 
         assertEq(LibFixedPointDecimalScale.decimalOrIntToInt(a, DECIMAL_MAX_SAFE_INT), a);

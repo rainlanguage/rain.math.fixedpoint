@@ -6,7 +6,6 @@ import {FIXED_POINT_ONE} from "./FixedPointDecimalConstants.sol";
 import {Strings} from "openzeppelin-contracts/contracts/utils/Strings.sol";
 import {LibParseChar} from "rain.string/lib/parse/LibParseChar.sol";
 import {CMASK_NUMERIC_0_9, CMASK_DECIMAL_POINT} from "rain.string/lib/parse/LibParseCMask.sol";
-import {console2} from "forge-std/Test.sol";
 
 library LibFixedPointDecimalStringsOpenZeppelin {
     /// @notice Convert a fixed point decimal to a string representation.

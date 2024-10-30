@@ -7,3 +7,6 @@
 [submodule "lib/rain.math.saturating"]
 	path = lib/rain.math.saturating
 	url = https://github.com/rainlanguage/rain.math.saturating
+[submodule "lib/rain.string"]
+	path = lib/rain.string
+	url = https://github.com/rainlanguage/rain.string

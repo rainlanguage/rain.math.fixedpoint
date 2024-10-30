@@ -2,7 +2,7 @@
 // SPDX-FileCopyrightText: Copyright (c) 2020 thedavidmeister
 pragma solidity =0.8.25;
 
-import {Test} from "forge-std/Test.sol";
+import {Test, console2} from "forge-std/Test.sol";
 
 import {LibFixedPointDecimalStringsOpenZeppelin} from "src/lib/LibFixedPointDecimalStringsOpenZeppelin.sol";
 
@@ -43,5 +43,13 @@ contract FixedPointDecimalStringsOpenZeppelinFixedPointToDecimalStringTest is Te
         );
         checkFixedPointToDecimalString(10101010101010101, "0.010101010101010101");
         checkFixedPointToDecimalString(1.10101010101010101e18, "1.10101010101010101");
+    }
+
+    function testStringRoundTripFuzz(uint256 value) external pure {
+        string memory str = LibFixedPointDecimalStringsOpenZeppelin.fixedPointToDecimalString(value);
+        console2.logString(str);
+        (bool success, uint256 parsed) = LibFixedPointDecimalStringsOpenZeppelin.decimalStringTofixedPoint(str);
+        assertTrue(success);
+        assertEq(value, parsed);
     }
 }

@@ -45,9 +45,11 @@ library LibFixedPointDecimalParse {
 
                 {
                     uint256 trailingZeroCursor = cursor - 1;
-                    while (trailingZeroCursor >= fracStart && LibParseChar.isMask(trailingZeroCursor, cursor, CMASK_ZERO) == 1) {
+                    while (
+                        trailingZeroCursor >= fracStart
+                            && LibParseChar.isMask(trailingZeroCursor, cursor, CMASK_ZERO) == 1
+                    ) {
                         trailingZeroCursor--;
-                        // digits--;
                     }
                     cursor = trailingZeroCursor + 1;
                 }

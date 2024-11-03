@@ -10,6 +10,14 @@ import {LibParseChar} from "rain.string/lib/parse/LibParseChar.sol";
 import {ParseDecimalOverflow} from "rain.string/error/ErrParse.sol";
 
 library LibFixedPointDecimalParse {
+    /// Converts a decimal string to a fixed point decimal. Returns error
+    /// selector if the string is not a valid fixed point decimal string. Fails
+    /// on overflow and precision loss, as well as invalid characters in any
+    /// position. DOES NOT support scientific notation.
+    /// Caller MUST check the error selector is 0 before using the value.
+    /// @param str The string to convert.
+    /// @return errorSelector 0 if successful, otherwise the error selector.
+    /// @return value The fixed point decimal value.
     function decimalStringTofixedPoint(string memory str) internal pure returns (bytes4, uint256) {
         unchecked {
             uint256 start;

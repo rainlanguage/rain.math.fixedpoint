@@ -7,7 +7,7 @@ import {Test} from "forge-std/Test.sol";
 import {LibFixedPointDecimalParse} from "src/lib/parse/LibFixedPointDecimalParse.sol";
 import {LibFixedPointDecimalFormat} from "src/lib/format/LibFixedPointDecimalFormat.sol";
 
-contract LibFixedPointDecimalParseTest is Test {
+contract LibFixedPointDecimalFormatTest is Test {
     function checkFixedPointToDecimalString(uint256 value, string memory expected) internal pure {
         assertEq(LibFixedPointDecimalFormat.fixedPointToDecimalString(value), expected);
     }

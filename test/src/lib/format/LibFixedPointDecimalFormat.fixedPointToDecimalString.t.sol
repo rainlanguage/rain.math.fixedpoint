@@ -4,11 +4,12 @@ pragma solidity =0.8.25;
 
 import {Test} from "forge-std/Test.sol";
 
-import {LibFixedPointDecimalStringsOpenZeppelin} from "src/lib/LibFixedPointDecimalStringsOpenZeppelin.sol";
+import {LibFixedPointDecimalParse} from "src/lib/parse/LibFixedPointDecimalParse.sol";
+import {LibFixedPointDecimalFormat} from "src/lib/format/LibFixedPointDecimalFormat.sol";
 
-contract FixedPointDecimalStringsOpenZeppelinFixedPointToDecimalStringTest is Test {
+contract LibFixedPointDecimalFormatTest is Test {
     function checkFixedPointToDecimalString(uint256 value, string memory expected) internal pure {
-        assertEq(LibFixedPointDecimalStringsOpenZeppelin.fixedPointToDecimalString(value), expected);
+        assertEq(LibFixedPointDecimalFormat.fixedPointToDecimalString(value), expected);
     }
 
     function testFixedPointToDecimalStringExamples() external pure {
@@ -43,5 +44,12 @@ contract FixedPointDecimalStringsOpenZeppelinFixedPointToDecimalStringTest is Te
         );
         checkFixedPointToDecimalString(10101010101010101, "0.010101010101010101");
         checkFixedPointToDecimalString(1.10101010101010101e18, "1.10101010101010101");
+    }
+
+    function testStringRoundTripFuzz(uint256 value) external pure {
+        string memory str = LibFixedPointDecimalFormat.fixedPointToDecimalString(value);
+        (bytes4 errorSelector, uint256 parsed) = LibFixedPointDecimalParse.decimalStringTofixedPoint(str);
+        assertEq(errorSelector, 0);
+        assertEq(value, parsed);
     }
 }

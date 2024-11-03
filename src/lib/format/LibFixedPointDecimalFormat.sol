@@ -2,10 +2,10 @@
 // SPDX-FileCopyrightText: Copyright (c) 2020 thedavidmeister
 pragma solidity ^0.8.25;
 
-import {FIXED_POINT_ONE} from "./FixedPointDecimalConstants.sol";
+import {FIXED_POINT_ONE} from "../FixedPointDecimalConstants.sol";
 import {Strings} from "openzeppelin-contracts/contracts/utils/Strings.sol";
 
-library LibFixedPointDecimalStringsOpenZeppelin {
+library LibFixedPointDecimalFormat {
     /// @notice Convert a fixed point decimal to a string representation.
     /// Trailing zeros are removed and decimals are only included if the value is
     /// non-integer as fixed point decimals.

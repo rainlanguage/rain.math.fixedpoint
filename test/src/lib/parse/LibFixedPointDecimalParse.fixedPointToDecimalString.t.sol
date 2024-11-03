@@ -2,13 +2,14 @@
 // SPDX-FileCopyrightText: Copyright (c) 2020 thedavidmeister
 pragma solidity =0.8.25;
 
-import {Test, console2} from "forge-std/Test.sol";
+import {Test} from "forge-std/Test.sol";
 
-import {LibFixedPointDecimalStringsOpenZeppelin} from "src/lib/LibFixedPointDecimalStringsOpenZeppelin.sol";
+import {LibFixedPointDecimalParse} from "src/lib/parse/LibFixedPointDecimalParse.sol";
+import {LibFixedPointDecimalFormat} from "src/lib/format/LibFixedPointDecimalFormat.sol";
 
-contract FixedPointDecimalStringsOpenZeppelinFixedPointToDecimalStringTest is Test {
+contract LibFixedPointDecimalParseTest is Test {
     function checkFixedPointToDecimalString(uint256 value, string memory expected) internal pure {
-        assertEq(LibFixedPointDecimalStringsOpenZeppelin.fixedPointToDecimalString(value), expected);
+        assertEq(LibFixedPointDecimalFormat.fixedPointToDecimalString(value), expected);
     }
 
     function testFixedPointToDecimalStringExamples() external pure {
@@ -46,10 +47,9 @@ contract FixedPointDecimalStringsOpenZeppelinFixedPointToDecimalStringTest is Te
     }
 
     function testStringRoundTripFuzz(uint256 value) external pure {
-        string memory str = LibFixedPointDecimalStringsOpenZeppelin.fixedPointToDecimalString(value);
-        console2.logString(str);
-        (bool success, uint256 parsed) = LibFixedPointDecimalStringsOpenZeppelin.decimalStringTofixedPoint(str);
-        assertTrue(success);
+        string memory str = LibFixedPointDecimalFormat.fixedPointToDecimalString(value);
+        (bytes4 errorSelector, uint256 parsed) = LibFixedPointDecimalParse.decimalStringTofixedPoint(str);
+        assertEq(errorSelector, 0);
         assertEq(value, parsed);
     }
 }

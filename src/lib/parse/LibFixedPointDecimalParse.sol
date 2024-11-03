@@ -7,7 +7,7 @@ import {ParseDecimalPrecisionLoss, ParseDecimalInvalidString} from "../../error/
 import {LibParseDecimal} from "rain.string/lib/parse/LibParseDecimal.sol";
 import {CMASK_NUMERIC_0_9, CMASK_DECIMAL_POINT, CMASK_ZERO} from "rain.string/lib/parse/LibParseCMask.sol";
 import {LibParseChar} from "rain.string/lib/parse/LibParseChar.sol";
-import {console2} from "forge-std/Test.sol";
+import {ParseDecimalOverflow} from "rain.string/error/ErrParse.sol";
 
 library LibFixedPointDecimalParse {
     function decimalStringTofixedPoint(string memory str) internal pure returns (bytes4, uint256) {
@@ -27,6 +27,9 @@ library LibFixedPointDecimalParse {
             }
 
             uint256 value = integer * FIXED_POINT_ONE;
+            if (value / FIXED_POINT_ONE != integer) {
+                return (ParseDecimalOverflow.selector, 0);
+            }
 
             if (cursor < end) {
                 // Skip the decimal point or bail if there isn't one.
@@ -67,7 +70,12 @@ library LibFixedPointDecimalParse {
                     }
 
                     uint256 ooms = 18 - digits;
-                    value += frac * 10 ** ooms;
+                    uint256 scaledFrac = frac * 10 ** ooms;
+                    uint256 preValue = value;
+                    value += scaledFrac;
+                    if (value < preValue) {
+                        return (ParseDecimalOverflow.selector, 0);
+                    }
                 }
             }
             return (0, value);

@@ -5,12 +5,19 @@ pragma solidity =0.8.25;
 import {Test} from "forge-std/Test.sol";
 
 import {LibFixedPointDecimalParse} from "src/lib/parse/LibFixedPointDecimalParse.sol";
+import {ParseDecimalInvalidString, ParseDecimalPrecisionLoss} from "src/error/ErrParse.sol";
+import {ParseEmptyDecimalString, ParseDecimalOverflow} from "rain.string/error/ErrParse.sol";
 
 contract LibFixedPointDecimalParseTest is Test {
     function checkDecimalStringToFixedPoint(string memory value, uint256 expected) internal pure {
         (bytes4 errorSelector, uint256 parsed) = LibFixedPointDecimalParse.decimalStringTofixedPoint(value);
         assertEq(errorSelector, 0);
         assertEq(parsed, expected);
+    }
+
+    function checkDecimalStringToFixedPointFailure(string memory value, bytes4 expected) internal pure {
+        (bytes4 errorSelector,) = LibFixedPointDecimalParse.decimalStringTofixedPoint(value);
+        assertEq(errorSelector, expected);
     }
 
     function testDecimalStringToFixedPointExamples() external pure {
@@ -75,6 +82,34 @@ contract LibFixedPointDecimalParseTest is Test {
         checkDecimalStringToFixedPoint(
             "000000115792089237316195423570985008687907853269984665640564039457.5840079131296399350000",
             type(uint256).max
+        );
+    }
+
+    /// Failure due to corrupt integer.
+    function testDecimalStringToFixedPointFailureCorruptInteger() external pure {
+        checkDecimalStringToFixedPointFailure("1a1.1", ParseDecimalInvalidString.selector);
+        checkDecimalStringToFixedPointFailure("1.1a1", ParseDecimalInvalidString.selector);
+        checkDecimalStringToFixedPointFailure("1.1.1", ParseDecimalInvalidString.selector);
+        checkDecimalStringToFixedPointFailure("a1.1", ParseEmptyDecimalString.selector);
+    }
+
+    /// Failure due to precision loss.
+    function testDecimalStringToFixedPointFailurePrecisionLoss() external pure {
+        checkDecimalStringToFixedPointFailure(
+            "115792089237316195423570985008687907853269984665640564039457.5840079131296399355",
+            ParseDecimalPrecisionLoss.selector
+        );
+    }
+
+    /// Failure due to overflow.
+    function testDecimalStringToFixedPointFailureOverflow() external pure {
+        checkDecimalStringToFixedPointFailure(
+            "115792089237316195423570985008687907853269984665640564039457.584007913129639936",
+            ParseDecimalOverflow.selector
+        );
+        checkDecimalStringToFixedPointFailure(
+            "1115792089237316195423570985008687907853269984665640564039457.584007913129639935",
+            ParseDecimalOverflow.selector
         );
     }
 }

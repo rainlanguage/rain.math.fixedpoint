@@ -9,6 +9,14 @@ import {LibFixedPointDecimalArithmeticOpenZeppelin} from "src/lib/LibFixedPointD
 import {LibWillOverflow} from "src/lib/LibWillOverflow.sol";
 
 contract FixedPointDecimalArithmeticOpenZeppelinTest is Test {
+    function fixedPointMulExternal(uint256 a, uint256 b, Math.Rounding rounding) external pure returns (uint256) {
+        return LibFixedPointDecimalArithmeticOpenZeppelin.fixedPointMul(a, b, rounding);
+    }
+
+    function fixedPointDivExternal(uint256 a, uint256 b, Math.Rounding rounding) external pure returns (uint256) {
+        return LibFixedPointDecimalArithmeticOpenZeppelin.fixedPointDiv(a, b, rounding);
+    }
+
     /// Not much to test because we're just wrapping OZ.
     function testFixedPointMul(uint256 a, uint256 b, uint8 roundingInt) external pure {
         roundingInt = uint8(bound(roundingInt, 0, 2));
@@ -25,7 +33,7 @@ contract FixedPointDecimalArithmeticOpenZeppelinTest is Test {
         Math.Rounding rounding = Math.Rounding(roundingInt);
 
         vm.expectRevert();
-        LibFixedPointDecimalArithmeticOpenZeppelin.fixedPointMul(a, b, rounding);
+        this.fixedPointMulExternal(a, b, rounding);
     }
 
     /// Not much to test because we're just wrapping OZ.
@@ -44,6 +52,6 @@ contract FixedPointDecimalArithmeticOpenZeppelinTest is Test {
         Math.Rounding rounding = Math.Rounding(roundingInt);
 
         vm.expectRevert();
-        LibFixedPointDecimalArithmeticOpenZeppelin.fixedPointDiv(a, b, rounding);
+        this.fixedPointDivExternal(a, b, rounding);
     }
 }

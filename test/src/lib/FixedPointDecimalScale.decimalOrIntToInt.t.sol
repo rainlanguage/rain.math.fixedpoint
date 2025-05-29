@@ -8,6 +8,10 @@ import {DECIMAL_MAX_SAFE_INT, FIXED_POINT_ONE} from "src/lib/FixedPointDecimalCo
 import {IntegerOverflow, ErrScaleDownPrecisionLoss} from "src/error/ErrScale.sol";
 
 contract FixedPointDecimalScaleDecimalOrIntToIntTest is Test {
+    function decimalOrIntToIntExternal(uint256 a, uint256 max) external pure returns (uint256) {
+        return LibFixedPointDecimalScale.decimalOrIntToInt(a, max);
+    }
+
     /// Test that decimalOrIntToInt rescales a decimal
     function testDecimalOrIntToIntRescalesDecimal(uint256 a) external pure {
         a = bound(a, 0, DECIMAL_MAX_SAFE_INT);
@@ -32,7 +36,7 @@ contract FixedPointDecimalScaleDecimalOrIntToIntTest is Test {
         max = bound(max, 0, a - 1);
 
         vm.expectRevert(abi.encodeWithSelector(IntegerOverflow.selector, a, max));
-        LibFixedPointDecimalScale.decimalOrIntToInt(a, max);
+        this.decimalOrIntToIntExternal(a, max);
     }
 
     /// Test that decimals above max error.
@@ -42,7 +46,7 @@ contract FixedPointDecimalScaleDecimalOrIntToIntTest is Test {
         a *= FIXED_POINT_ONE;
 
         vm.expectRevert(abi.encodeWithSelector(IntegerOverflow.selector, a / FIXED_POINT_ONE, max));
-        LibFixedPointDecimalScale.decimalOrIntToInt(a, max);
+        this.decimalOrIntToIntExternal(a, max);
     }
 
     /// Test that decimals that incur precision loss error.
@@ -51,6 +55,6 @@ contract FixedPointDecimalScaleDecimalOrIntToIntTest is Test {
         vm.assume(a % FIXED_POINT_ONE != 0);
 
         vm.expectRevert(abi.encodeWithSelector(ErrScaleDownPrecisionLoss.selector, a));
-        LibFixedPointDecimalScale.decimalOrIntToInt(a, DECIMAL_MAX_SAFE_INT);
+        this.decimalOrIntToIntExternal(a, DECIMAL_MAX_SAFE_INT);
     }
 }

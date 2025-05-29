@@ -8,6 +8,10 @@ import {LibFixedPointDecimalScale} from "src/lib/LibFixedPointDecimalScale.sol";
 import {LibFixedPointDecimalScaleSlow} from "test/lib/LibFixedPointDecimalScaleSlow.sol";
 
 contract FixedPointDecimalScaleTestScaleUp is Test {
+    function scaleUpExternal(uint256 a, uint256 scaleUpBy) external pure returns (uint256) {
+        return LibFixedPointDecimalScale.scaleUp(a, scaleUpBy);
+    }
+
     // Special case for scale = 0 is that input = output.
     function testScaleUpBy0(uint256 a) public pure {
         assertEq(a, LibFixedPointDecimalScale.scaleUp(a, 0));
@@ -30,13 +34,13 @@ contract FixedPointDecimalScaleTestScaleUp is Test {
         vm.assume(LibWillOverflow.scaleUpWillOverflow(a, scaleUpBy));
 
         vm.expectRevert(stdError.arithmeticError);
-        LibFixedPointDecimalScale.scaleUp(a, scaleUpBy);
+        this.scaleUpExternal(a, scaleUpBy);
     }
 
     function testScaleUpOverflowBoundary(uint256 a) public {
         vm.assume(a > 0);
         vm.expectRevert(stdError.arithmeticError);
-        LibFixedPointDecimalScale.scaleUp(a, OVERFLOW_RESCALE_OOMS);
+        this.scaleUpExternal(a, OVERFLOW_RESCALE_OOMS);
     }
 
     function testScaleUpSaturatingParity(uint256 a, uint8 scaleUpBy) public pure {

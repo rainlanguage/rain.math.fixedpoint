@@ -8,6 +8,10 @@ import {LibFixedPointDecimalScale, FIXED_POINT_DECIMALS} from "src/lib/LibFixedP
 import {LibFixedPointDecimalScaleSlow} from "test/lib/LibFixedPointDecimalScaleSlow.sol";
 
 contract FixedPointDecimalScaleTestScaleN is Test {
+    function scaleNExternal(uint256 a, uint256 decimals, uint256 flags) external pure returns (uint256) {
+        return LibFixedPointDecimalScale.scaleN(a, decimals, flags);
+    }
+
     function testScaleNReferenceImplementation(uint256 a, uint256 decimals, uint256 flags) public pure {
         vm.assume(flags <= FLAG_MAX_INT);
         vm.assume(!LibWillOverflow.scaleNWillOverflow(a, decimals, flags));
@@ -71,7 +75,7 @@ contract FixedPointDecimalScaleTestScaleN is Test {
         vm.assume(LibWillOverflow.scaleUpWillOverflow(a, scaleUpBy));
 
         vm.expectRevert(stdError.arithmeticError);
-        LibFixedPointDecimalScale.scaleN(a, targetDecimals, flags);
+        this.scaleNExternal(a, targetDecimals, flags);
     }
 
     function testScaleNGt18Saturate(uint256 a, uint8 targetDecimals, uint256 flags) public pure {

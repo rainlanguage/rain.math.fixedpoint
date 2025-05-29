@@ -34,7 +34,7 @@ contract FixedPointDecimalScaleTestScaleUp is Test {
         vm.assume(LibWillOverflow.scaleUpWillOverflow(a, scaleUpBy));
 
         vm.expectRevert(stdError.arithmeticError);
-        LibFixedPointDecimalScale.scaleUp(a, scaleUpBy);
+        this.scaleUpExternal(a, scaleUpBy);
     }
 
     function testScaleUpOverflowBoundary(uint256 a) public {

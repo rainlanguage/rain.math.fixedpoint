@@ -4,7 +4,7 @@ pragma solidity =0.8.25;
 
 import {Test} from "forge-std/Test.sol";
 import {LibFixedPointDecimalScale} from "src/lib/LibFixedPointDecimalScale.sol";
-import {LibWillOverflow, OVERFLOW_RESCALE_OOMS} from "src/lib/LibWillOverflow.sol";
+import {OVERFLOW_RESCALE_OOMS} from "src/lib/LibWillOverflow.sol";
 import {LibFixedPointDecimalScaleSlow} from "test/lib/LibFixedPointDecimalScaleSlow.sol";
 
 contract FixedPointDecimalScaleTestScaleDown is Test {

@@ -34,11 +34,13 @@ library LibFixedPointDecimalFormat {
             uint256 divisor = 10;
             // Divide first to try to discover imprecision due to a suspected
             // trailing zero being non-zero. Also means we cannot overflow.
-            //slither-disable-next-line divide-before-multiply
+            //slither-disable-start divide-before-multiply
+            //forge-lint: disable-next-line(divide-before-multiply)
             while (fracPlusOne == (fracPlusOne / divisor) * divisor) {
                 trailingZeros += 1;
                 divisor *= 10;
             }
+            //slither-disable-end
 
             assembly ("memory-safe") {
                 // This can't underflow because we're always guaranteed at least

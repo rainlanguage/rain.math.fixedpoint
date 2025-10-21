@@ -107,13 +107,19 @@ library LibFixedPointDecimalScaleSlow {
     function scaleBySlow(uint256 a, int8 ooms, uint256 flags) internal pure returns (uint256) {
         if (ooms > 0) {
             if (flags & FLAG_SATURATE != 0) {
+                // Positive ooms fits in unsigned space.
+                //forge-lint: disable-next-line(unsafe-typecast)
                 return scaleUpSaturatingSlow(a, uint8(ooms));
             } else {
+                // Ooms is positive so fits in unsigned space.
+                //forge-lint: disable-next-line(unsafe-typecast)
                 return scaleUpSlow(a, uint8(ooms));
             }
         }
 
         if (ooms < 0) {
+            // -1 * negative signed integer fits in unsigned integer.
+            //forge-lint: disable-next-line(unsafe-typecast)
             uint8 scaleDownBy = ooms == -128 ? 128 : uint8(-1 * ooms);
             if (flags & FLAG_ROUND_UP != 0) {
                 return scaleDownRoundUpSlow(a, scaleDownBy);

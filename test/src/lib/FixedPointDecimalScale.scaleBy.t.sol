@@ -32,10 +32,15 @@ contract FixedPointDecimalScaleTestScaleBy is Test {
         // Keep rounding flag.
         flags = flags & FLAG_ROUND_UP;
         vm.assume(scaleBy > 0);
+        // Positive scale by will fit in unsigned int.
+        //forge-lint: disable-next-line(unsafe-typecast)
         vm.assume(!LibWillOverflow.scaleUpWillOverflow(a, uint8(scaleBy)));
 
         assertEq(
-            LibFixedPointDecimalScale.scaleUp(a, uint8(scaleBy)), LibFixedPointDecimalScale.scaleBy(a, scaleBy, flags)
+            // Positive scaleBy fits in unsigned space.
+            //forge-lint: disable-next-line(unsafe-typecast)
+            LibFixedPointDecimalScale.scaleUp(a, uint8(scaleBy)),
+            LibFixedPointDecimalScale.scaleBy(a, scaleBy, flags)
         );
     }
 
@@ -43,6 +48,8 @@ contract FixedPointDecimalScaleTestScaleBy is Test {
         // Keep rounding flag.
         flags = flags & FLAG_ROUND_UP;
         vm.assume(scaleBy > 0);
+        // Positive scaleby fits in unsigned space.
+        //forge-lint: disable-next-line(unsafe-typecast)
         vm.assume(LibWillOverflow.scaleUpWillOverflow(a, uint8(scaleBy)));
         vm.expectRevert(stdError.arithmeticError);
         this.scaleByExternal(a, scaleBy, flags);
@@ -54,6 +61,8 @@ contract FixedPointDecimalScaleTestScaleBy is Test {
         vm.assume(scaleBy > 0);
 
         assertEq(
+            // positive scaleBy fits in unsigned space.
+            //forge-lint: disable-next-line(unsafe-typecast)
             LibFixedPointDecimalScale.scaleUpSaturating(a, uint8(scaleBy)),
             LibFixedPointDecimalScale.scaleBy(a, scaleBy, flags)
         );

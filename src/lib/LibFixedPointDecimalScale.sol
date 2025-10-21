@@ -7,8 +7,7 @@ import {
     FLAG_SATURATE,
     FLAG_ROUND_UP,
     FIXED_POINT_DECIMALS,
-    OVERFLOW_RESCALE_OOMS,
-    DECIMAL_MAX_SAFE_INT
+    OVERFLOW_RESCALE_OOMS
 } from "./FixedPointDecimalConstants.sol";
 import {ErrScaleDownPrecisionLoss, IntegerOverflow} from "../error/ErrScale.sol";
 
@@ -195,8 +194,12 @@ library LibFixedPointDecimalScale {
         unchecked {
             if (ooms > 0) {
                 if (flags & FLAG_SATURATE > 0) {
+                    // Positive ooms fits in unsigned space.
+                    //forge-lint: disable-next-line(unsafe-typecast)
                     return scaleUpSaturating(a, uint8(ooms));
                 } else {
+                    // Positive ooms fits in unsigned space.
+                    //forge-lint: disable-next-line(unsafe-typecast)
                     return scaleUp(a, uint8(ooms));
                 }
             } else if (ooms < 0) {
@@ -204,6 +207,7 @@ library LibFixedPointDecimalScale {
                 // to an absolute value with bitwise NOT + 1.
                 // This is slightly less gas than multiplying by negative 1 and
                 // casting it, and handles the case of -128 without overflow.
+                //forge-lint: disable-next-line(unsafe-typecast)
                 uint8 scaleDownBy = uint8(~ooms) + 1;
                 if (flags & FLAG_ROUND_UP > 0) {
                     return scaleDownRoundUp(a, scaleDownBy);

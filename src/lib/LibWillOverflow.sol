@@ -3,9 +3,13 @@
 pragma solidity ^0.8.25;
 
 import {
-    FLAG_MAX_INT,
-    FLAG_ROUND_UP,
     FLAG_SATURATE,
+    // Exported for convenience.
+    //forge-lint: disable-next-line(unused-import)
+    FLAG_MAX_INT,
+    // Exported for convenience.
+    //forge-lint: disable-next-line(unused-import)
+    FLAG_ROUND_UP,
     OVERFLOW_RESCALE_OOMS,
     FIXED_POINT_DECIMALS
 } from "./FixedPointDecimalConstants.sol";
@@ -103,6 +107,8 @@ library LibWillOverflow {
     function scaleByWillOverflow(uint256 a, int8 scaleBy, uint256 flags) internal pure returns (bool) {
         // If we're scaling up and not saturating check the overflow.
         if (scaleBy > 0 && (FLAG_SATURATE & flags == 0)) {
+            // positive scale by fits in unsigned space.
+            //forge-lint: disable-next-line(unsafe-typecast)
             return scaleUpWillOverflow(a, uint8(scaleBy));
         } else {
             return false;

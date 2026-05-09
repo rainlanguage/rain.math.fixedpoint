@@ -2,8 +2,8 @@
 // SPDX-FileCopyrightText: Copyright (c) 2020 Rain Open Source Software Ltd
 pragma solidity =0.8.25;
 
-import {Test} from "forge-std/Test.sol";
-import {Math} from "openzeppelin-contracts/contracts/utils/math/Math.sol";
+import {Test} from "forge-std-1.16.1/src/Test.sol";
+import {Math} from "@openzeppelin-contracts-4.8.3/utils/math/Math.sol";
 
 import {LibFixedPointDecimalArithmeticOpenZeppelin} from "src/lib/LibFixedPointDecimalArithmeticOpenZeppelin.sol";
 import {LibWillOverflow} from "src/lib/LibWillOverflow.sol";

@@ -7,7 +7,7 @@ pragma solidity ^0.8.25;
 import {FIXED_POINT_ONE} from "./FixedPointDecimalConstants.sol";
 // Exported for convenience.
 //forge-lint: disable-next-line(unused-import)
-import {Strings} from "@openzeppelin-contracts-4.8.3/utils/Strings.sol";
+import {Strings} from "@openzeppelin-contracts-5.6.1/utils/Strings.sol";
 // Exported for convenience.
 //forge-lint: disable-next-line(unused-import)
 import {LibParseChar} from "rain-string-0.1.0/src/lib/parse/LibParseChar.sol";

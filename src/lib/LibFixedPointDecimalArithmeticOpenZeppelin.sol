@@ -2,7 +2,7 @@
 // SPDX-FileCopyrightText: Copyright (c) 2020 Rain Open Source Software Ltd
 pragma solidity ^0.8.25;
 
-import {Math} from "@openzeppelin-contracts-4.8.3/utils/math/Math.sol";
+import {Math} from "@openzeppelin-contracts-5.6.1/utils/math/Math.sol";
 
 import {FIXED_POINT_ONE} from "./FixedPointDecimalConstants.sol";
 

@@ -2,11 +2,11 @@
 // SPDX-FileCopyrightText: Copyright (c) 2020 Rain Open Source Software Ltd
 pragma solidity =0.8.25;
 
-import {Test} from "forge-std/Test.sol";
+import {Test} from "forge-std-1.16.1/src/Test.sol";
 
 import {LibFixedPointDecimalParse} from "src/lib/parse/LibFixedPointDecimalParse.sol";
 import {ParseDecimalInvalidString, ParseDecimalPrecisionLoss} from "src/error/ErrParse.sol";
-import {ParseEmptyDecimalString, ParseDecimalOverflow} from "rain.string/error/ErrParse.sol";
+import {ParseEmptyDecimalString, ParseDecimalOverflow} from "rain-string-0.1.0/src/error/ErrParse.sol";
 
 contract LibFixedPointDecimalParseTest is Test {
     function checkDecimalStringToFixedPoint(string memory value, uint256 expected) internal pure {

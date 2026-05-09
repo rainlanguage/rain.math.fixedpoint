@@ -64,46 +64,55 @@ into their contracts, using the relevant supporting libs only, to minimise
 dependencies and potential code bloat, or even inconsistent behaviours between
 libs.
 
-## Dev stuff
+## Install
 
-### Local environment & CI
+Via [soldeer](https://soldeer.xyz):
 
-Uses nixos.
-
-Install `nix develop` - https://nixos.org/download.html.
-
-Run `nix develop` in this repo to drop into the shell. Please ONLY use the nix
-version of `foundry` for development, to ensure versions are all compatible.
-
-Read the `flake.nix` file to find some additional commands included for dev and
-CI usage.
-
-## Legal stuff
-
-Everything is under DecentraLicense 1.0 (DCL-1.0) which can be found in `LICENSES/`.
-
-This is basically `CAL-1.0` which is an open source license
-https://opensource.org/license/cal-1-0
-
-The non-legal summary of DCL-1.0 is that the source is open, as expected, but
-also user data in the systems that this code runs on must also be made available
-to those users as relevant, and that private keys remain private.
-
-Roughly it's "not your keys, not your coins" aware, as close as we could get in
-legalese.
-
-This is the default situation on permissionless blockchains, so shouldn't require
-any additional effort by dev-users to adhere to the license terms.
-
-This repo is REUSE 3.2 compliant https://reuse.software/spec-3.2/ and compatible
-with `reuse` tooling (also available in the nix shell here).
-
+```sh
+forge soldeer install rain-math-fixedpoint~<version>
 ```
+
+## Develop
+
+This repo uses [nix](https://nixos.org/download.html). The default shell is the
+slim `sol-shell` from [rainix](https://github.com/rainlanguage/rainix).
+
+```sh
+nix develop          # enter the shell
+forge soldeer install # install deps declared in foundry.toml
+forge test
+```
+
+Tasks:
+
+- `rainix-sol-test` — `forge test`
+- `rainix-sol-static` — slither
+- `rainix-sol-legal` — `reuse lint`
+
+Use the nix-pinned `forge` for all development.
+
+## Publish
+
+Tag `v<x.y.z>` on `main`. The
+[`Publish to Soldeer`](.github/workflows/publish-soldeer.yaml) wrapper delegates
+to rainix's reusable workflow, which derives the package name from the repo name
+(`rain.math.fixedpoint` → `rain-math-fixedpoint`).
+
+## License
+
+DecentraLicense 1.0 (DCL-1.0) — full text in
+[`LICENSES/`](LICENSES/LicenseRef-DCL-1.0.txt). Roughly `CAL-1.0`
+([opensource.org](https://opensource.org/license/cal-1-0)) plus user-data
+disclosure obligations consistent with permissionless-blockchain assumptions.
+
+This repo is [REUSE 3.2](https://reuse.software/spec-3.2/) compliant. Verify
+locally:
+
+```sh
 nix develop -c rainix-sol-legal
 ```
 
 ## Contributions
 
-Contributions are welcome **under the same license** as above.
-
-Contributors agree and warrant that their contributions are compliant.
+Welcome under the same license. Contributors warrant that their contributions
+are compliant.

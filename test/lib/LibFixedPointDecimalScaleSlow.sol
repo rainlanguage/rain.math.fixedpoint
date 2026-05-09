@@ -2,7 +2,7 @@
 // SPDX-FileCopyrightText: Copyright (c) 2020 Rain Open Source Software Ltd
 pragma solidity =0.8.25;
 
-import {LibSaturatingMath} from "rain.math.saturating/lib/LibSaturatingMath.sol";
+import {LibSaturatingMath} from "rain-math-saturating-0.1.1/src/lib/LibSaturatingMath.sol";
 import {
     FIXED_POINT_DECIMALS,
     FLAG_ROUND_UP,

@@ -2,7 +2,7 @@
 // SPDX-FileCopyrightText: Copyright (c) 2020 Rain Open Source Software Ltd
 pragma solidity =0.8.25;
 
-import {Test, stdError, stdMath} from "forge-std/Test.sol";
+import {Test, stdError, stdMath} from "forge-std-1.16.1/src/Test.sol";
 import {FLAG_MAX_INT, FLAG_ROUND_UP, FLAG_SATURATE, LibWillOverflow} from "src/lib/LibWillOverflow.sol";
 import {LibFixedPointDecimalScale} from "src/lib/LibFixedPointDecimalScale.sol";
 import {LibFixedPointDecimalScaleSlow} from "test/lib/LibFixedPointDecimalScaleSlow.sol";

@@ -1,4 +1,5 @@
 [profile.default]
+libs = ["dependencies"]
 # See more config options https://github.com/foundry-rs/foundry/tree/master/config
 
 solc = "0.8.25"
@@ -9,3 +10,11 @@ evm_version = "cancun"
 
 fuzz.runs = 1024
 
+[dependencies]
+forge-std = "1.16.1"
+"@openzeppelin-contracts" = "4.8.3"
+"rain-math-saturating" = "0.1.1"
+"rain-string" = "0.1.0"
+
+[soldeer]
+recursive_deps = false

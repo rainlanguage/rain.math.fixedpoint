@@ -3,7 +3,7 @@
 pragma solidity ^0.8.25;
 
 import {FIXED_POINT_ONE} from "../FixedPointDecimalConstants.sol";
-import {Strings} from "@openzeppelin-contracts-4.8.3/utils/Strings.sol";
+import {Strings} from "@openzeppelin-contracts-5.6.1/utils/Strings.sol";
 
 library LibFixedPointDecimalFormat {
     /// @notice Convert a fixed point decimal to a string representation.

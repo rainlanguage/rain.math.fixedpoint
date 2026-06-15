@@ -112,4 +112,42 @@ contract LibFixedPointDecimalParseTest is Test {
             ParseDecimalOverflow.selector
         );
     }
+
+    /// Failure because the FRACTIONAL part itself overflows a `uint256` while
+    /// being parsed by `unsafeDecimalStringToInt`, before the digit-count
+    /// precision-loss check is reached. A frac of 78 nines cannot fit in a
+    /// `uint256` so the inner integer parse returns `ParseDecimalOverflow`, and
+    /// that selector is propagated unchanged from the fractional-parse error
+    /// branch.
+    function testDecimalStringToFixedPointFailureFractionalPartOverflow() external pure {
+        // 78 nines after the point. 1e78 > type(uint256).max so the inner
+        // unsafeDecimalStringToInt overflows.
+        checkDecimalStringToFixedPointFailure(
+            "0.999999999999999999999999999999999999999999999999999999999999999999999999999999",
+            ParseDecimalOverflow.selector
+        );
+        // 79 digits, leading non-zero, also overflows the inner integer parse.
+        checkDecimalStringToFixedPointFailure(
+            "0.9000000000000000000000000000000000000000000000000000000000000000000000000000009",
+            ParseDecimalOverflow.selector
+        );
+    }
+
+    /// A character immediately after the integer part that is NOT a decimal
+    /// point must be rejected as an invalid string by the decimal-point gate.
+    /// Critically, `"1x"` has no further input after the bad character, so if
+    /// the decimal-point gate is bypassed the parse wrongly SUCCEEDS as `1e18`
+    /// rather than erroring; this is what distinguishes the decimal-point gate
+    /// from the downstream trailing-garbage gate (which the pre-existing corrupt
+    /// integer tests already reach via inputs whose garbage is caught later).
+    function testDecimalStringToFixedPointInvalidAfterInteger() external pure {
+        // Non-point character directly after the integer, with nothing after it,
+        // so the decimal-point gate is the only thing that can reject it.
+        checkDecimalStringToFixedPointFailure("1x", ParseDecimalInvalidString.selector);
+        checkDecimalStringToFixedPointFailure("10x", ParseDecimalInvalidString.selector);
+        // A bare trailing decimal point with no fractional digits is a valid
+        // empty fraction and parses as the integer value (the gate accepts the
+        // point itself).
+        checkDecimalStringToFixedPoint("1.", 1e18);
+    }
 }

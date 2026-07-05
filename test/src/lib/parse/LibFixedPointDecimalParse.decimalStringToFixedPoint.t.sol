@@ -145,9 +145,55 @@ contract LibFixedPointDecimalParseTest is Test {
         // so the decimal-point gate is the only thing that can reject it.
         checkDecimalStringToFixedPointFailure("1x", ParseDecimalInvalidString.selector);
         checkDecimalStringToFixedPointFailure("10x", ParseDecimalInvalidString.selector);
-        // A bare trailing decimal point with no fractional digits is a valid
-        // empty fraction and parses as the integer value (the gate accepts the
-        // point itself).
-        checkDecimalStringToFixedPoint("1.", 1e18);
+        // A bare trailing decimal point with no fractional digits is a
+        // malformed empty fraction and is rejected.
+        checkDecimalStringToFixedPointFailure("1.", ParseDecimalInvalidString.selector);
+    }
+
+    /// An empty fraction is invalid. The decimal point MUST be followed by at
+    /// least one digit, so every integer prefix with a bare trailing point is
+    /// rejected as an invalid string.
+    function testDecimalStringToFixedPointEmptyFraction() external pure {
+        checkDecimalStringToFixedPointFailure("0.", ParseDecimalInvalidString.selector);
+        checkDecimalStringToFixedPointFailure("1.", ParseDecimalInvalidString.selector);
+        checkDecimalStringToFixedPointFailure("123.", ParseDecimalInvalidString.selector);
+        checkDecimalStringToFixedPointFailure("00.", ParseDecimalInvalidString.selector);
+        checkDecimalStringToFixedPointFailure(
+            "115792089237316195423570985008687907853269984665640564039457.", ParseDecimalInvalidString.selector
+        );
+        // Scientific notation is unsupported, so nothing following the bare
+        // point can make the empty fraction parseable.
+        checkDecimalStringToFixedPointFailure("1.e5", ParseDecimalInvalidString.selector);
+        // A lone point also has an empty integer part, which is rejected
+        // before the fraction is considered.
+        checkDecimalStringToFixedPointFailure(".", ParseEmptyDecimalString.selector);
+        // A point-led fraction has an empty integer part, which is rejected
+        // before the fraction is considered.
+        checkDecimalStringToFixedPointFailure(".5", ParseEmptyDecimalString.selector);
+    }
+
+    /// Any integer with a bare trailing decimal point appended is an invalid
+    /// string. The integer is bounded so it cannot overflow the fixed point
+    /// representation, leaving the empty fraction as the only rejection.
+    function testDecimalStringToFixedPointEmptyFractionFuzz(uint256 value) external pure {
+        value = bound(value, 0, type(uint256).max / 1e18);
+        checkDecimalStringToFixedPointFailure(
+            string.concat(vm.toString(value), "."), ParseDecimalInvalidString.selector
+        );
+    }
+
+    /// The valid forms adjacent to the rejected empty fractions parse to the
+    /// values given by decimal semantics: the same digits with an explicit
+    /// fractional digit, and the bare integer without the point.
+    function testDecimalStringToFixedPointEmptyFractionAdjacentValid() external pure {
+        checkDecimalStringToFixedPoint("0", 0);
+        checkDecimalStringToFixedPoint("0.0", 0);
+        checkDecimalStringToFixedPoint("1", 1e18);
+        checkDecimalStringToFixedPoint("1.0", 1e18);
+        checkDecimalStringToFixedPoint("123", 123e18);
+        checkDecimalStringToFixedPoint("123.0", 123e18);
+        checkDecimalStringToFixedPoint(
+            "115792089237316195423570985008687907853269984665640564039457.584007913129639935", type(uint256).max
+        );
     }
 }

@@ -18,7 +18,7 @@ fuzz.runs = 1024
 forge-std = "1.16.1"
 "@openzeppelin-contracts" = "5.6.1"
 "rain-math-saturating" = "0.1.1"
-"rain-string" = "0.1.0"
+"rain-string" = "0.2.0"
 
 [soldeer]
 recursive_deps = false

@@ -21,7 +21,7 @@ integrity = "477bddfb9f67411b66288dca81abcabfcbab2bcdb322299c5eccd577f0d360c4"
 
 [[dependencies]]
 name = "rain-string"
-version = "0.1.0"
-url = "https://soldeer-revisions.s3.amazonaws.com/rain-string/0_1_0_09-05-2026_20:14:06_rain.zip"
+version = "0.2.0"
+url = "https://soldeer-revisions.s3.amazonaws.com/rain-string/0_2_0_09-05-2026_21:16:31_rain.zip"
 checksum = "847b9366128c5dcc5849c6938ae7ac92561ed8185bf304f1b1eb9ef59d77954e"
 integrity = "7cb6ee638b59b840ea59e014e2610fdccc30a1593e763590e298314f00700561"

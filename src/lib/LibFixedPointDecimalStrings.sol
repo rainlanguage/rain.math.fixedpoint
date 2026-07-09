@@ -10,9 +10,9 @@ import {FIXED_POINT_ONE} from "./FixedPointDecimalConstants.sol";
 import {Strings} from "@openzeppelin-contracts-5.6.1/utils/Strings.sol";
 // Exported for convenience.
 //forge-lint: disable-next-line(unused-import)
-import {LibParseChar} from "rain-string-0.1.0/src/lib/parse/LibParseChar.sol";
+import {LibParseChar} from "rain-string-0.2.0/src/lib/parse/LibParseChar.sol";
 // Exported for convenience.
 //forge-lint: disable-next-line(unused-import)
-import {CMASK_NUMERIC_0_9, CMASK_DECIMAL_POINT} from "rain-string-0.1.0/src/lib/parse/LibParseCMask.sol";
+import {CMASK_NUMERIC_0_9, CMASK_DECIMAL_POINT} from "rain-string-0.2.0/src/lib/parse/LibParseCMask.sol";
 
 library LibFixedPointDecimalStrings {}

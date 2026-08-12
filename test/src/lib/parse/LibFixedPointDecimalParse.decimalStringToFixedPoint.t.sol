@@ -6,7 +6,7 @@ import {Test} from "forge-std-1.16.1/src/Test.sol";
 
 import {LibFixedPointDecimalParse} from "src/lib/parse/LibFixedPointDecimalParse.sol";
 import {ParseDecimalInvalidString, ParseDecimalPrecisionLoss} from "src/error/ErrParse.sol";
-import {ParseEmptyDecimalString, ParseDecimalOverflow} from "rain-string-0.1.0/src/error/ErrParse.sol";
+import {ParseEmptyDecimalString, ParseDecimalOverflow} from "rain-string-0.2.0/src/error/ErrParse.sol";
 
 contract LibFixedPointDecimalParseTest is Test {
     function checkDecimalStringToFixedPoint(string memory value, uint256 expected) internal pure {

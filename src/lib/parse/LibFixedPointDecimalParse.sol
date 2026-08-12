@@ -4,10 +4,10 @@ pragma solidity ^0.8.25;
 
 import {FIXED_POINT_ONE} from "../FixedPointDecimalConstants.sol";
 import {ParseDecimalPrecisionLoss, ParseDecimalInvalidString} from "../../error/ErrParse.sol";
-import {LibParseDecimal} from "rain-string-0.1.0/src/lib/parse/LibParseDecimal.sol";
-import {CMASK_NUMERIC_0_9, CMASK_DECIMAL_POINT, CMASK_ZERO} from "rain-string-0.1.0/src/lib/parse/LibParseCMask.sol";
-import {LibParseChar} from "rain-string-0.1.0/src/lib/parse/LibParseChar.sol";
-import {ParseDecimalOverflow} from "rain-string-0.1.0/src/error/ErrParse.sol";
+import {LibParseDecimal} from "rain-string-0.2.0/src/lib/parse/LibParseDecimal.sol";
+import {CMASK_NUMERIC_0_9, CMASK_DECIMAL_POINT, CMASK_ZERO} from "rain-string-0.2.0/src/lib/parse/LibParseCMask.sol";
+import {LibParseChar} from "rain-string-0.2.0/src/lib/parse/LibParseChar.sol";
+import {ParseDecimalOverflow} from "rain-string-0.2.0/src/error/ErrParse.sol";
 
 library LibFixedPointDecimalParse {
     /// Converts a decimal string to a fixed point decimal. Returns error

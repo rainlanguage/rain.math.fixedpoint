@@ -17,7 +17,7 @@ fuzz.runs = 1024
 [dependencies]
 forge-std = "1.16.1"
 "@openzeppelin-contracts" = "5.6.1"
-"rain-math-saturating" = "0.1.2"
+"rain-math-saturating" = "0.1.10"
 "rain-string" = "0.2.0"
 
 [soldeer]

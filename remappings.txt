@@ -1,4 +1,4 @@
 @openzeppelin-contracts-5.6.1/=dependencies/@openzeppelin-contracts-5.6.1/
 forge-std-1.16.1/=dependencies/forge-std-1.16.1/
-rain-math-saturating-0.1.2/=dependencies/rain-math-saturating-0.1.2/
+rain-math-saturating-0.1.10/=dependencies/rain-math-saturating-0.1.10/
 rain-string-0.2.0/=dependencies/rain-string-0.2.0/

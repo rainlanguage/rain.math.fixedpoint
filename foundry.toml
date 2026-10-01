@@ -15,10 +15,10 @@ evm_version = "cancun"
 fuzz.runs = 1024
 
 [dependencies]
-forge-std = "1.16.1"
-"@openzeppelin-contracts" = "5.6.1"
+forge-std = "1.17.0"
+"@openzeppelin-contracts" = "5.7.0"
 "rain-math-saturating" = "0.1.10"
-"rain-string" = "0.2.0"
+"rain-string" = "0.3.9"
 
 [soldeer]
 recursive_deps = false

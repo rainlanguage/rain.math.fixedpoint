@@ -13,7 +13,9 @@ library LibFixedPointDecimalParse {
     /// Converts a decimal string to a fixed point decimal. Returns error
     /// selector if the string is not a valid fixed point decimal string. Fails
     /// on overflow and precision loss, as well as invalid characters in any
-    /// position. DOES NOT support scientific notation.
+    /// position. A decimal point MUST be followed by at least one digit; an
+    /// empty fraction such as "1." is invalid. DOES NOT support scientific
+    /// notation.
     /// Caller MUST check the error selector is 0 before using the value.
     /// @param str The string to convert.
     /// @return errorSelector 0 if successful, otherwise the error selector.
@@ -48,6 +50,12 @@ library LibFixedPointDecimalParse {
                 cursor++;
                 uint256 fracStart = cursor;
                 cursor = LibParseChar.skipMask(cursor, end, CMASK_NUMERIC_0_9);
+
+                // The decimal point MUST be followed by at least one digit.
+                // An empty fraction is malformed.
+                if (cursor == fracStart) {
+                    return (ParseDecimalInvalidString.selector, 0);
+                }
 
                 // Ensure there's no unprocessed garbage.
                 if (cursor < end) {

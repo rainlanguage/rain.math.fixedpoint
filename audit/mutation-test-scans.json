@@ -1,0 +1,19 @@
+[
+  {
+    "timestamp": "2026-06-15T00:00:00Z",
+    "commit": "dc85846152e2fd42f8f2c07feb72cc1abc708674",
+    "publishedTag": "v0.2.0",
+    "commitsAheadOfTag": 0,
+    "scope": "LibFixedPointDecimalParse.decimalStringTofixedPoint",
+    "tool": "adversarial-mutation-test",
+    "skillVersion": "0.24.0",
+    "summary": {
+      "behaviours": 15,
+      "survivingMutantsVsExisting": 2,
+      "gapsFilled": 2,
+      "equivalentMutants": 2,
+      "newTests": 2,
+      "filed": []
+    }
+  }
+]
